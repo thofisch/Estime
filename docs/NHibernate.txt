@@ -1,0 +1,267 @@
+
+Fordybelsesuge i DAL - custom + ORM (specifically NHibernate)
+=============================================================
+
+NHibernate thoughts
+-------------------
+
+	- A database change will require a potential re-compilation of code if ADO.NET is used but only a change in a configuration file if NHibernate is used;
+	- Maintaining raw SQL queries is a pain;
+	- With NHibernate, maintaining object relationships is quick and out-of-the-box. With ADO.NET, all the code needs to be written;
+	- One can use out-of-the-box second-level caching with NHibernate, something that will need to be coded if ADO.NET were used. 
+
+
+
+	Promoters say this is good because everything you write or change at some higher level (the BLL in this case) will be automagically reflected down the chain. The small cons is there's a so called "learning curve", that is you need some learning about the new language/framework. The big pros, they say, is the developer goes faster, on a proven infrastructure!
+
+
+
+	NHibernate : Some Naked Thoughts
+	Please, Just Remember One Thing
+	Just for a few seconds forget everything you know about NHibernate.
+	Good.
+	Now, before I snap my fingers and everything comes flooding back, the only thing you need to know about NHibernate is that whenever you need to, you can easily circumvent it and do whatever is needed to get the job done (like use an IDbConnection and IDbCommand to execute a stored procedure).
+	**snap**
+	I often hear people saying it, and often say it myself, but people just don't seem to get it. You use NHibernate to save yourself from having to write a ton of code for 95% of your data access, and then, after profiling, optimize the critical 5% with whatever other approach you prefer. Its stupidly easy. You can access an IDbConnection directly from an NHibernate's ISession, or subclass your NHibernateDataAccess class with an SqlServerDataAccess class and override those critical sections.
+	Instead of taking the above sane approach, I see people laboring through huge amounts of mundane code in order to keep control over that unique 5% (maybe a special report, or performance sensitive path). I see people concerned about performance, without understanding that for most of what an application does, the performance difference between method A, B and C are indistinguishable, whereas the maintenance and developer costs vary hugely.
+	Essentially I see people who are worried about not being able to tweak when necessary and people who simply don't want to change.
+	To the first group I say that your fears are understood, but not to worry. You can always drop down to the assembly of data access (SQL, Sprocs, ...).
+	Four Areas of Improvement
+	NHibernate makes my life easier and my code better, but it isn't without problems. A lot of these have to do with the fact that it's trying to solve a complex problem, of which numerous variations exist. As such, NHibernate's biggest problem is that it's hard to learn and harder still to master. There are some specific pain points I'd like to see addressed.
+	First, mapping needs to be simplified. It's extremely intimidating to a newcomer and requires that you understand most of the fundamentals. This is already being addressed with FluentNhibernate and hopefully the project will continue to mature.
+	Secondly, collections and references can be particularly puzzling. From the names used (bags, maps and sets are all foreign to most .NET developers), to advanced features like caching, lazy loading and cascading. I'm not sure if this is something that can actually be improved, or if this battle needs to be fought via documentation.
+	Thirdly, neither HQL nor Criterias feel like the most natural querying languages. Hopefully development on Linq to NHibernate will continue to be a priority.
+	Finally, NHibernate is an abstraction that will leak. This shouldn't be unexpected, but it would be nice to try and address some of the worst offenders. The leaks that continuously trip me up are related to management of ISessions. Lazy loading and session management is a black art – doubtlessly easy for masters, and frustrating for everyone else.
+	NHibernate and Microsoft
+	Microsoft has long been criticized for its attitude towards open source frameworks. The common approach appears to be to compete with established open source frameworks using inferior solutions. MSTest, MSBuild, Sandcastle, ASP.NET Ajax, ASP.NET MVC, Entity Framework, Unity, Logging Application Block, Velocity, Team Foundation SSC are all examples that come to mind.
+	It'd be nice if Microsoft took a different approach with NHibernate, by not only acknowledging its presence and using it in samples and demos, but also actively contributing to it. Remember, during NHibernate's lifetime, Microsoft has invented three distinct data access strategies (DataSets, Linq to SQL and the Entity Framework). So much effort, so much relearning by developers, to end up with a poor replica of NHibernate years later.
+	A couple years ago, Google contributed Hibernate Shards to the Hibernate project (and I'd bet that they've been involved in Hibernate in other ways since then). Surely Microsoft can help fund the project in a manner that works with the NHibernate team (money or resources).
+	NHibernate and You
+	I do think it's important for any developer to learn new things. Equally important is to learn them from different people. Its important that you learn Ruby or Python, not because you should use them, but because seeing MVC over ActiveRecord completely changes your perspective on how applications can be built. The more approaches that you know, the more likely you are to pick the right one for the job. If you only know one approach then you'll always use that one – and you better hope like hell that the person selling you that approach knows what he or she is talking about.
+	As for NHibernate specifically, most developers should learn about O/R mappers. You should know the advantages and disadvantages and therefore know when a situations calls for it or not.
+
+
+
+25 Reasons Not To Write Your Own Object Relational Mapper
+
+Not long ago I was ask to evaluate what features are need to build a robust data access layer. The choices were:
+
+	*
+	  Build / Code Gen a DAL
+	*
+	  Use an existing Object Relational Mapper
+	*
+	  Build an Object Relational Mapper spesific for this application.
+
+DataSets were not appropriate to this application, so the the first and last choice were essentially the same. The database schema is not one that allows code generation of a DAL, so it was down to build a DAL or use an exsiting one. I recommended that the application will use NHibernate (of course), but the initial thought was to build a simple DAL on top of stored procedures, and manually unpack the result set to collection of objects.
+
+This is really simple code, mostly, and that can be code gen'ed fairly easily. The problem with this approach is that for a complex DAL (as is this case) you aren't really going to be able to handle all the functionality that most application will eventually need. It is highly procedural in nature, and require you to track a lot of things in the application code.
+
+I sat down and compile a list of features that I made use of in a recent project, which used NHibernate for data access. Some of them are basic O/RM features, some of them are convenience features, some of them are advanced stuff that I'm using. Some of those features are overlapping, some required other features to be present, some are a stepping stone for interesting things.
+
+This list is based of NHibernate, and it is not complete by any sense. I'm probably using some other stuff that I'm not thinking about right now. There are fully featured O/RMs out there that doesn't support all those features, and there are some really nice features that NHibernate does not support.
+
+This also assumes a Unit Of Work pattern that drives the O/RM (NHibernate, DLinq, etc). There are other ways to handle this (Active Record, Disconnected Objects, etc), but I find that I really like the Unit Of Work style of work, since it frees me from manually tracking what changed and what didn't. It also maps closely to the way that web applications work (a web request is a unit of work), and can be modified to match a windows application pattern using real unit of works.
+
+Without any particular order, here they are:
+
+   1.
+	  Transactions:
+	  Mandatory for doing any work at all.
+	  Needed to support updates across several tables / rows / objects in a consistent way and to handle several users working on the same set of objects.
+   2.
+	  Concurrency Control:
+	  Mandatory for doing any work at all.
+	  Notification (usually exception) when saving a set of changes that has been changed by a different user since the last time the data was read.
+	  I prefer an implementation that relies on a field in the object that is used to version the changes. I would use a TIMESTAMP column on SQL Server, and try to use something similar when I'm using other databases.
+	  Another way to do this is to check all the columns in the table, to see if they have changed. This is not as good, since it may cause granularity problems (DateTime sometimes does not round trip well, for instance), it has performance implications. as well. One thing to note if this approach is used is null handling. This also require mainting the original state of the object.
+   3.
+	  Builtin Caching (per unit of work & per application):
+	  Caching highly improve the performance of an application. Per unit of work caching means that if a single request needed a certain peice of data twice in the same unit of work, the fraemwork is smart enough to give the data from memory instead of hitting the database again.
+	  Per application caching means that if the same piece of data is requested from two different units of work, only the first request hit the database, the second one is served from the cache. Ideally this should be transperant to the code. The application cache should be smart enough to handle updates / deletes / inserts without the application code needing to handle it explicitly.
+   4.
+	  Maintaining Object Identity:
+	  Requesting a certain object twice in the same unit of work returns the same object instance. This is important since it means that any changes already made to this object in this unit of work are retained. Otherwise you may get concurrency violation in the same unit of work.
+	  A really nice side affect of this is that you can perform object equality tests using normal OO semantics. Otherwise you would need to compare PK and maybe versioning fields.
+   5.
+	  Caching invalidation policies:
+	  Assuming that per application caching is enabled, you need to have a way to invalidate the cache if the database has changed by another application.
+   6.
+	  Querying Support:
+	  Allow to query for a single object or a set of objects based on their properties. Preferably with an object API. This is needed to support such things as search forms, which are notoriously hard to do easily. It is also very useful when you want to do reporting and / or some smart data manipulation.
+   7.
+	  Associations:
+	  The data in the database is not limited to a single row. There are associations between the different tables. Those associations should translate to the object level as well. Preferably, you will need support for generics and for sets and maps at a minimum.
+	  The associations that are needed are:
+		  *
+			One to Many - Person ->> Addresses
+		  *
+			Many to many - Users << -- >> Roles
+		  *
+			Many to one - Address -> Person
+		  *
+			(Variant of many to one) Many to Any - Rule -> IHasRules
+		  *
+			(Variant of one to many) Any to Many - IHasRules ->> Rules
+		  * One to One - Person < - > Consort
+   8.
+	  Statement Batching:
+	  This is very important for increasing throughput. If you can send several statements to the database in one go, it will significantly reduce the number of network roundtrips that you have.
+   9.
+	  Polymorphic Queries:
+	  Query for all objects and their sub types. For instance, get all rules for object, where a rule is a part of object hierarchy.
+  10.
+	  Dirty Checking:
+	  Using a Unit Of Work pattern means that I don't need to track my modified objects. If they are associated with the current unit of work (retrieved from the unit of work, or attached to it) the unit of work track them and saves them when I decide to commit the current unit of work.
+  11.
+	  Undo Capability:
+	  Set the state of an object to its state in the database.
+  12.
+	  Lazy Loading:
+	  Mandatory if you are using associations.
+	  Load only the current object, without any collections. Allows to load related objects the first time the association is accessed.
+  13.
+	  Flexible Eager Fetch:
+	  Allows selective overriding of lazy loaded behavior when needed. Solves the Select N+1 problem.
+  14.
+	  Cascading Updates/Deletes:
+	  A change to a parent object means a change to a child object. The change can be a delete (which can also be handled by a cascade delete in DB) or an update (can be handled by a trigger in DB), but it should also be able to follow the association paths to find new objects that were added to existing object, and insert them to the database.
+  15.
+	  Debugability:
+	  When (not if) something goes wrong, there should be a way to follow the path of what is going on until I find what happened. This preclude certain types of smart-ass tricks. (Ever had the pleasure of debugging run time generated code?).
+	  This can be provided by logs as well, though, and is usually not an issue. I maintain this because I saw some fairly hair raising implementations that I wouldn't really wish to debug.
+  16.
+	  Safe For Multithreading:
+	  The framework should be usable from mutliply threads. How this is done is not really important, but this mean that it can rely on thread affinaty, since ASP.Net can and will move you from one thread to another if it feels like it.
+  17.
+	  Life Cycle Events:
+	  Allows an object to take action when certain actions (usually Create / Update / Delete / Load) are happening. This is very useful for fetching data from other locations as well (Active Directory, Web Service, etc).
+  18.
+	  Exception Policy:
+	  A well defined policy for what happens when an exception occurs. (What exception is cosidered fatal, for instance? What should happen if exception Foo occurs? etc).
+  19.
+	  Loading data without loading the object:
+	  Grab a few property of an object without loading the whole object. This is very useful if you want to load just the neccecary data for a list box, where you usually want just the PK and some sort of description.
+  20.
+	  Composite Primary Keys:
+	  They are not something that I like, but they are needed in many cases.
+  21.
+	  Create, Update, Delete, Load:
+	  Not much to say about this, is there?
+  22.
+	  Dependency Ordering:
+	  If I insert two objects, and one of them has a foriegn key to the other, they should be inserted in the correct order to avoid errors.
+  23.
+	  Paging support:
+	  You are going to need it, and I rather like it to be in the database level than on the application side.
+  24.
+	  Custom Types Support:
+	  It should be possible to map to more than just the basic types. The simplest example is to map an XML column to an XmlDocument.
+  25.
+	  Aggregation support:
+	  Allow to execute queries that will retreive such things as count(), sum(), avg(), etc. Those are needed frequesntly to do a lot of things, and it shouldn't be hard to do them.
+
+All of this is to point to the fact that building a robust data access layer is not something that can be dealt easily. It require quite a bit of thinking, and I don't think that any of the features that I had mentioned here are trivial. Getting them all into a coherent package is going to be hard. It is also not something that you can delegate to a junior programmer, in my opinion.
+
+Too many places where you need to know what you are doing. Again, this is just a partial list of features that I used in a recent project. Some of them are deal breakers (transactions, concurrency, paging, aggregation), some are simply convenient (undo, loading object's properties), and some are required for performance (lazy loading, caching).
+
+If you plan to use the Unit Of Work pattern (most O/RM do, but not all), take a look at this list and consider what do you think that you'll need for the application, and then consider whatever you want to do it yourself, or use an existing tool that can do this for you. Personally, I really hate duplicating existing functionality for no reason except NIH Syndrome.
+
+I heard something that I really liked in DotNetRocks a while ago that is somewhat related: 
+
+Guy #1: Do you know that VB is faster than C++?
+Guy #2: Really? Never heard of it. By how much?
+Guy #1: Oh, about three to four months.
+
+
+ The Least Common Denominator approach
+
+I was talking with a team about their project, and doing a very minor code review. Naturally, one of the things that I checked first is the data access portion of the application.
+
+I looked at the data access code in a sense of shock. I was on a phone call with the team, with one of them speaking and I interrupted him to say something along the lines of: “Guys, the nineties called and they want their handed rolled data access back!”
+
+Just to give you an idea, when I am saying that the code has hand rolled data layer, I mean that it include such things as string concatenation to build queries (although I couldn’t find SQL injection, which surprised me), manual hydration of the entities, manual support for “eager loading” using SELECT N+1 queries, manual support for transactions, etc.
+
+The reason for that, it seems, is that they wanted to find the lowest common denominator approach, so “everyone” can use it.
+
+Sorry, ain’t going to happen. The moment that you give me something like that, I am going to drop the entire thing. I cannot work like that. The sheer amount of grunt work involved in getting anything done in such a system is a complete and total blocker. It is not the lowest common denominator, it is the least common denominator.
+
+It is ugly, it is nasty and people should really stop writing data access layers, get on with the program and use a real OR/M. Stop stealing from your clients!
+
+
+
+ Stealing from your client
+
+I had a (great) talk yesterday, introducing Active Record. During this talk, I reused Jeremy's statements about data access. If you write data access code, you are stealing from your client.
+
+Frans Bouma puts it beautifully:
+
+	No customer should accept that the team hired for writing the line-of-business application has spend time on writing a report-control or for example a grid control. So why should a customer accept to pay for time spend on other plumbing code? Just because the customer doesn't know any better? If so, isn't that erm... taking advantage of the inability of the customer to judge what the 'software guys' did was correct?
+
+The context for Frans' post was a design decision from the Entity Framework team. I read Frans' post first, and I didn't quite know how to react to it, until I saw what the proposed design is. You can read the entire EF post here, but I'll try to summarize it so you can actually understand the point without going and reading the whole thing.
+
+The problem is supporting change tracking in disconnected scenarios. In particular, you take an object from the database and send it to the presentation layer, some time later, you get the object from the presentation layer and persist it to the database again. There is a whole host of bad practices and really bad design decisions that are implicit in the problem statement, but we will leave that alone for now.
+
+This is still a pretty common scenario, and it is more than reasonable that you would want your data access approach to support this.
+
+Here is how you do this using NHibernate:
+
+	session.Merge( entityFromPresentationLayer );
+
+Frans' LLBLGen support a very similar feature. In other words, it is the business of the data access framework to do this, none of the developer's business to do any such thing.
+
+The current proposed EF design problem can be summarized in a single line.
+
+	context.ChangeRelationship(
+	customer1,
+	order1,
+	c=>c.Orders,
+	EntityState.Added);
+
+This is code that you as the user of EF, is supposed to write.
+
+If you write this type of code, you are stealing from your client.
+
+This design violates the Infrastructure Responsibility Principle: Developers doesn't write infrastructure code for supported scenarios.
+
+In other words, it is okay not to support a feature, but it is not okay to say that this is how you are supporting a feature.
+
+This Is Broken, By Design
+
+
+ How to design your data connectivity strategy
+
+I'm scurrying at lunch to finish reviewing some architectural guidelines for the P&P group (I'll be done today, I promise).  I stumbled across a section with the same title as this blog post.  I'll answer the question concisely:
+
+Pull an existing persistence tool off the shelf, make sure you understand it, and code, code, code!  Persistence coding is a commodity in this day and age, so just use and existing tool and get on with your project.  It's extremely unlikely that there's any business advantage to writing data access code by hand when there are so many existing tools out there.  I'll repeat this little gem one last time, if you're writing ADO.Net code by hand, you're stealing from your employer or client.  
+
+
+
+
+Reason 1 - Performance
+
+Hibernate can save your guts, and it can let you achieve some performance gains that you could hardly ever acheive by hand-coding.
+
+Hibernate generates very efficient queries very consistently. However, that is only the begining of the performance story. Hibernate employs very agressive, and very intelligent first and second level caching strategy. This is a major factor in acheiving the high scalability.
+Hibernate spares you a unnecessary database calls. So all these lookup tables, and rarely changing data can get cached, and much more.
+It allows you to cache how much you want, and it can be very intelligent with write-backs. Furthermore, it integrates well with the major open source (OSCache, EHCache, JBossCache, ...) and commercial caching products such as Tangosol giving you an opportunity to use even more sophisticated features that come with these products.
+
+Reason 2 - Effective Cross-Database Portability
+
+Hibernates portability accross the relational databases is amazing.
+It is literally one configuration paramter change. You only have to change the database dialect. This property was especially helpful in my previous company because we used to deploy to wide range of databases since had bunch of extra licenses, so we never knew if the DBA manager would allocate us a Sybase or DB2. So we used to develop on MySQL, and then deploy on whatever. The only change was the change of the dialect - one line change in the configuration file.
+That was it!
+
+Reason 3 - Developers' Productivity
+
+I have to admit that Hibernate ,like other sophisticated frameworks, has a steep, but short learning curve, but once you got it - you got it. It becomes a breeze to work with, and it feels like a magic.
+If you use it with Spring framework, and Open Session in a View filter you do not even know that you are using it.
+You keep working with the objects, and Hibernate does its work for you - persists the changes to the database.
+
+If you are not familiar with the Hibernate I would encourage you to go to Hibernate.org and check the documentation - specially the quickstart, and do few examples. More you get to know about it - more you'll love it.
+
+My only issue with the Hibernate is their support forum - these guys are arrogant! I guess they feel they have right to be.
+
+
+
+

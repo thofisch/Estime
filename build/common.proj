@@ -1,0 +1,135 @@
+<!--
+***************************************************************************
+*
+* Magnetix Build Automation - Common Properties, Items and Targets
+*
+***************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+	<!-- Master Properties -->
+	<PropertyGroup>
+		<!-- Default configuration -->
+		<Configuration Condition="'$(Configuration)'==''">Debug</Configuration>
+
+		<!-- Default project specific properties -->
+		<BuildRoot>$(MSBuildProjectDirectory)</BuildRoot>
+		<BuildOutput>$(BuildRoot)\output</BuildOutput>
+		<BuildOutputReports>$(BuildOutput)\reports</BuildOutputReports>
+		<DatabaseScriptRoot Condition="'$(DatabaseScriptRoot)'==''">$(BuildRoot)\scripts</DatabaseScriptRoot>
+		<ExtensionTasksPath>$(BuildRoot)\tasks\</ExtensionTasksPath>
+		<SolutionRoot>$(BuildRoot)\..</SolutionRoot>
+		<SourceRoot>$(SolutionRoot)\src</SourceRoot>
+		<ToolsRoot>$(SolutionRoot)\tools</ToolsRoot>
+
+		<!-- Specific tools root -->
+		<ToolNUnit>$(ToolsRoot)\nunit-2.5\nunit-console.exe</ToolNUnit>
+		<ToolNCover>$(ToolsRoot)\ncover-1.5\NCover.Console.exe</ToolNCover>
+		<ToolNCoverExplorer>$(ToolsRoot)\ncoverexplorer-1.4\NCoverExplorer.Console.exe</ToolNCoverExplorer>
+		<ToolILMerge>$(ToolsRoot)\ILMerge.exe</ToolILMerge>
+
+		<!-- Sandcastle/documentation specific properties -->
+		<SandcastleBuidlerPath>C:\Program Files\EWSoftware\Sandcastle Help File Builder\SandcastleBuilderConsole.exe</SandcastleBuidlerPath>
+		<SandcastleBuilderProjectTemplateFile>$(MSBuildExtensionsPath)\template.shfb</SandcastleBuilderProjectTemplateFile>
+		<SandcastleBuilderProjectFile>$(MSBuildProjectDirectory)\project.shfb</SandcastleBuilderProjectFile>
+		<SandcastleBuilderArguments>-assembly=%22$(OutDir)*.dll%22; -outputpath=%22$(OutDir).%22</SandcastleBuilderArguments>
+	</PropertyGroup>
+
+	<!-- Import MSBuild extension targets -->
+	<Import Project="$(ExtensionTasksPath)\Magnetix.tasks"/>
+	<Import Project="$(ExtensionTasksPath)\MSBuild.ExtensionPack.tasks"/>
+	<Import Project="$(ExtensionTasksPath)\MSBuild.Community.Tasks.Targets"/>
+	
+	<!-- Solution and database script items -->
+	<ItemGroup>
+		<ProjectSolutionItems Include="$(SolutionRoot)\**\*.sln" />
+	</ItemGroup>
+
+	<!-- Target properties -->
+	<PropertyGroup>
+		<BuildTargets>
+			$(BuildTargets);
+			Init;
+			RebuildDatabase;
+			Compile;
+			Test
+		</BuildTargets>
+		<CleanTargets>
+			$(CleanTargets);
+			CleanSolution;
+			DropDatabase;
+			CleanOutput
+		</CleanTargets>
+	</PropertyGroup>
+
+	<!-- Default build -->
+	<Target Name="Build" DependsOnTargets="$(BuildTargets)"/>
+
+	<!-- Initialization -->
+	<Target Name="Init">
+		<MakeDir Directories="$(BuildOutput)" Condition="!Exists('$(BuildOutput)')" />
+		<MakeDir Directories="$(BuildOutputReports)" Condition="!Exists('$(BuildOutputReports)')" />
+	</Target>
+
+	<!-- Compilation/Build -->
+	<Target Name="Compile" DependsOnTargets="Init">
+		<MSBuild Projects="@(ProjectSolutionItems)" Targets="Build" Properties="Configuration=$(Configuration)"/>
+	</Target>
+
+	<!-- Testing/Reporting -->
+	<Target Name="Test" DependsOnTargets="Compile">
+		<ItemGroup>
+			<TestAssemblies Include="$(SolutionRoot)\**\bin\$(Configuration)\*.Tests.dll"/>
+		</ItemGroup>
+
+		<Exec Command="&quot;$(ToolNUnit)&quot; @(TestAssemblies->'&quot;%(Identity)&quot;', ' ') /nologo /noshadow /xml=&quot;$(BuildOutput)\TestResults.xml&quot;"/>
+
+		<!--<Exec Command="&quot;$(ToolNCover)&quot; //reg //w &quot;$(BuildOutput)&quot; //x &quot;$(BuildOutput)\Coverage.xml&quot; //q &quot;$(ToolNUnit)&quot; @(TestAssemblies->'&quot;%(Identity)&quot;') /nologo /noshadow /xml=&quot;$(BuildOutput)\TestResults.xml&quot;"/>-->
+		<!--
+			ModuleSummary,
+			ModuleNamespaceSummary,
+			ModuleClassSummary,
+			ModuleClassFunctionSummary
+		-->
+		<!--<Exec Command="&quot;$(ToolNCoverExplorer)&quot; &quot;$(BuildOutput)\Coverage.xml&quot; /h:&quot;$(BuildOutput)\Coverage.htm&quot; /p:BuildAutomation /r:ModuleClassSummary /m:90"/>-->
+	</Target>
+
+	<!-- Documentation -->
+	<Target Name="Documentation" DependsOnTargets="Clean;Init;Compile">
+		<MSBuild Projects="..\docs\documentation.shfbproj"/>
+	</Target>
+
+	<!-- Cleaning -->
+	<Target Name="Clean" DependsOnTargets="$(CleanTargets)" />
+
+	<Target Name="CleanSolution">
+		<MSBuild Projects="@(ProjectSolutionItems)" Targets="Clean" Properties="Configuration=$(Configuration)"/>
+	</Target>
+
+	<Target Name="CleanOutput">
+		<RemoveDir Directories="$(BuildOutputReports)" Condition="Exists('$(BuildOutputReports)')" />
+		<RemoveDir Directories="$(BuildOutput)" Condition="Exists('$(BuildOutput)')" />
+	</Target>
+
+	<Target Name="ValidateDatabaseProperties">
+		<Error Condition="'$(DatabaseServer)'==''" Text="Use must specify the DatabaseServer property" />
+		<Error Condition="'$(DatabaseName)'==''" Text="Use must specify the DatabaseName property" />
+	</Target>
+	
+	<!-- Database targets -->
+	<Target Name="RebuildDatabase" DependsOnTargets="ValidateDatabaseProperties">
+		<ManageSqlDatabaseTask
+			Server="$(DatabaseServer)"
+			Database="$(DatabaseName)"
+			ScriptBaseDirectory="$(DatabaseScriptRoot)"
+			Action="Rebuild" />
+	</Target>
+
+	<Target Name="DropDatabase" DependsOnTargets="ValidateDatabaseProperties">
+		<ManageSqlDatabaseTask
+			Server="$(DatabaseServer)"
+			Database="$(DatabaseName)"
+			ScriptBaseDirectory="$(DatabaseScriptRoot)"
+			Action="Drop" />
+	</Target>
+</Project>

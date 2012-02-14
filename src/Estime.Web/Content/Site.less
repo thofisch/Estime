@@ -1,0 +1,247 @@
+﻿body {
+	background-color: #E2E2E2;
+	font-family: Trebuchet MS;
+	font-size: .85em;
+}
+
+.clearfix {
+	clear: both;
+}
+
+.rounded-corner(@radius: 5px){
+	border-radius: @radius; 
+	-moz-border-radius: @radius; 
+	-webkit-border-radius: @radius; 
+}
+
+.header {
+	.rounded-corner(5px 5px 0px 0px);
+	background-color: #fff;
+}
+
+.top-logo {
+	background-image: url('/Content/gfx/exato_solutions_top.jpg');
+	height: 136px;
+	background-repeat: no-repeat;
+	background-position: 10px 10px;
+	position: relative;
+
+	.user-info {
+		position: absolute; 
+		right: 20px; 
+		top: 15px; 
+		background-color: #fff;
+	}
+}
+
+.nav {
+	background-color: #fff;
+	border-bottom: 1px dashed #E2E2E2;
+}
+
+.menu {
+	margin: 0 0 0 10px;
+	padding: 0;
+	list-style-type: none;
+
+	li {
+		float: left;
+		margin-right: 10px;
+		margin-bottom: 10px;
+
+		a {
+			color: #f90;
+			display: block;
+			text-decoration: none;
+		}
+
+		a.active {
+			color: #960;
+		}
+
+		a:hover {
+			color: #fc9;
+		}
+
+	}
+}
+
+.special {
+	font-weight: bold;
+}
+
+
+.new-task {
+	background-color: #fff;
+}
+
+.footer {
+	.rounded-corner(0px 0px 5px 5px);
+	text-align: center;
+	background-color: #fff;
+	border-top: 1px dashed #E2E2E2;
+	height: 50px;
+	min-height: 50px;
+	line-height: 50px;
+}
+
+/* FORM LAYOUT ELEMENTS   
+----------------------------------------------------------*/
+
+fieldset {
+    border: 1px solid #ddd;
+    padding: 0 1.4em 1.4em 1.4em;
+    margin: 0 0 1.5em 0;
+}
+
+legend {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+textarea {
+    min-height: 75px;
+}
+
+button[type="submit"] {
+	padding: 10px 20px 10px 35px;
+	background-repeat: no-repeat;
+	background-position: 5px center;
+	font-size: 120%;
+	font-weight: bold;
+	border-color: #ddd;
+}
+
+button.icon-accept {
+	background-image: url("/Content/gfx/accept.png");
+}
+
+button.icon-delete {
+	background-image: url("/Content/gfx/delete.png");
+}
+
+button.icon-disk {
+	background-image: url("/Content/gfx/disk.png");
+}
+
+input[type="text"], 
+input[type="password"] {
+    border: 1px solid #ccc;
+    padding: 2px;
+    font-size: 1.2em;
+    color: #444;
+    width: 200px;
+}
+
+select {
+    border: 1px solid #ccc;
+    padding: 2px;
+    font-size: 1.2em;
+    color: #444;
+}
+
+input[type="submit"] {
+    font-size: 1.2em;
+    padding: 5px;
+}
+
+table {
+    border: solid 1px #e8eef4;
+    border-collapse: collapse;
+}
+
+table td {
+    padding: 5px;
+    border: solid 1px #e8eef4;
+}
+
+table th {
+    padding: 6px 5px;
+    text-align: left;
+    background-color: #e8eef4;
+    border: solid 1px #e8eef4;}
+
+.error {
+    color: Red;
+}
+
+/* Styles for validation helpers
+-----------------------------------------------------------*/
+.field-validation-error {
+    color: #ff0000;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+.input-validation-error {
+    border: 1px solid #ff0000;
+    background-color: #ffeeee;
+}
+
+.validation-summary-errors {
+    font-weight: bold;
+    color: #ff0000;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+/* Styles for editor and display helpers
+----------------------------------------------------------*/
+.display-label, 
+.editor-label {
+    margin: 1em 0 0 0;
+}
+
+.display-field, 
+.editor-field {
+    margin: 0.5em 0 0 0;
+}
+
+.text-box {
+    width: 30em;
+}
+
+.text-box.multi-line {
+    height: 6.5em;
+}
+
+.tri-state {
+    width: 6em;
+}
+
+
+// timepicker styles
+.ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
+.ui-timepicker-div dl { text-align: left; }
+.ui-timepicker-div dl dt { height: 25px; margin-bottom: -25px; }
+.ui-timepicker-div dl dd { margin: 0 10px 10px 65px; }
+.ui-timepicker-div td { font-size: 90%; }
+.ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
+
+.button-icon() {
+	height: 25px;
+	background-repeat: no-repeat;
+	background-position: 5px center;
+	font-size: 80%;
+	font-weight: bold;
+	padding: 0 10px 0 30px;
+}
+
+.icon-hw-sw-add {
+	.button-icon();
+	background-image: url("/Content/gfx/computer_add.png");
+}
+
+.icon-hw-sw-remove {
+	.button-icon();
+	background-image: url("/Content/gfx/computer_delete.png");
+}
+
+.icon-hw-sw-clear {
+	.button-icon();
+	background-image: url("/Content/gfx/computer_add.png");
+}

@@ -1,0 +1,15 @@
+packages
+obj
+bin
+_ReSharper.*
+*.csproj.user
+*.resharper.user
+*.resharper
+*.suo
+*.cache
+*~
+*.swp
+build/output
+GlobalAssemblyInfo.cs
+lint.db
+*.sln.DotSettings.user

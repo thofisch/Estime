@@ -1,0 +1,178 @@
+﻿@model Estime.Web.Models.TaskInput
+@{
+    ViewBag.Title = "Registrer opgave";
+}
+
+<script type="text/javascript" src="/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="/Scripts/jquery.validate.unobtrusive.js"></script>
+<script type="text/javascript" src="/Scripts/jquery-ui-1.8.17.js"></script>
+<script type="text/javascript" src="/Scripts/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="/js/jquery-ui-timepicker-addon-i18n.js"></script>
+
+<script type="text/javascript">
+
+	$wares = (function ($, w) {
+
+		function buildArray() {
+			var values = [];
+			$('#WareList').find('option').each(function () {
+				values.push($(this).text());
+			});
+			$('#SelectedWares').val(values.join('¤'));
+		}
+
+		function confirm() {
+			return w.confirm('Er du sikker?');
+		}
+
+		return {
+			add: function () {
+				var $ware = $('#ware');
+				var value = $ware.val();
+				if (value !== undefined && value.length > 0) {
+					$ware.val('');
+					var html = $('<option></option>').text(value);
+					$('#WareList').append(html);
+				}
+				buildArray();
+				return false;
+			},
+			remove: function () {
+				var selected = $('#WareList').find('option:selected');
+				if (selected.length>0 && confirm()) {
+					selected.remove();
+					buildArray();
+				}
+				return false;
+			},
+			clear: function () {
+				var selected = $('#WareList').find('option');
+				if (selected.length > 0 && confirm()) {
+					$('#WareList').empty();
+					buildArray();
+				}
+				return false;
+			}
+		};
+	})(jQuery, window);
+
+	(function($) {
+		$(function() {
+			$('#Timestamp').datetimepicker({ stepMinute: 5 });
+
+			$("#Consultant").autocomplete({ source: '@Url.Action("Find", "Consultant")', minLength: 3 });
+			$("#ClientName").autocomplete({ source: '@Url.Action("Find", "Client")', minLength: 2 });
+			$("#ware").keyup(function(e) {
+				e = e || event;
+				var keyCode = e.keyCode;
+				if (keyCode == 13) {
+					$wares.add();
+				}
+			}).autocomplete({ source: '@Url.Action("Find", "Ware")', minLength: 3 });
+		});
+	})(jQuery);
+
+</script>
+
+<h2>@ViewBag.Title</h2>
+<p>Udfyld felterne og gem opgaven.</p>
+
+@using(Html.BeginForm())
+{
+	<div class="container_4">
+		<div class="grid_4">
+			<div class="editor-label">
+				@Html.LabelFor(m => m.Consultant)
+			</div>
+			<div class="editor-field">
+				@Html.TextBoxFor(m => m.Consultant)
+				@Html.ValidationMessageFor(m => m.Consultant)
+			</div>
+		</div>
+
+		<div class="grid_4">
+			<div class="editor-label">
+				@Html.LabelFor(m => m.ClientName)
+			</div>
+			<div class="editor-field">
+				@Html.TextBoxFor(m => m.ClientName)
+				@Html.ValidationMessageFor(m => m.ClientName)
+			</div>
+		</div>
+
+		<div class="grid_4">
+			<div class="editor-label">
+				@Html.LabelFor(m => m.Timestamp)
+			</div>
+			<div class="editor-field">
+				<input id="Timestamp" name="Timestamp" type="text" value="@Model.Timestamp.ToString("yyyy-MM-dd HH:mm")"/>
+				@Html.ValidationMessageFor(m => m.Timestamp)
+			</div>
+		</div>
+		<div class="grid_4">
+			<div class="editor-label">
+				@Html.LabelFor(m => m.DurationInMinutes)
+			</div>
+			<div class="editor-field">
+				@Html.EditorFor(x => x.DurationInMinutes, "Duration")
+			</div>
+		</div>
+		<div class="grid_4">
+			<div class="editor-label">
+				@Html.LabelFor(m => m.Type)
+			</div>
+			<div class="editor-field">
+				@Html.TextBoxFor(m => m.Type)
+				@Html.ValidationMessageFor(m => m.Type)
+			</div>
+		</div>
+
+		<div class="grid_2">
+			<div class="editor-label">
+				@Html.LabelFor(m => m.Description)
+			</div>
+			<div class="editor-field">
+				@Html.TextAreaFor(m => m.Description, new { style="width: 430px; height: 125px;"})
+				@Html.ValidationMessageFor(m => m.Description)
+			</div>
+		</div>
+		<div class="grid_2">
+			<div class="editor-label">
+				&nbsp;
+			</div>
+			<div class="editor-field">
+				@Html.CheckBoxFor(m => m.Mileage)
+				@Html.LabelFor(m => m.Mileage)
+			</div>
+		</div>
+
+		<div class="grid_4">
+			<div class="editor-label">
+				@Html.LabelFor(m => m.Wares)
+			</div>
+			<div class="editor-field">
+				<input type="text" id="ware" name="ware" />
+				<button class="icon-hw-sw-add" onclick="return $wares.add()">Tilføj</button>
+				<button class="icon-hw-sw-remove" onclick="return $wares.remove()">Fjern</button>
+				<button class="icon-hw-sw-clear" onclick="return $wares.clear()">Ryd</button>
+			</div>
+			<div class="editor-field">
+				<select id="WareList" name="WareList" multiple="multiple" style="width: 435px; height: 125px;"></select>
+				@Html.Hidden("SelectedWares", string.Join("¤", Model.Wares))
+			</div>
+		</div>
+
+		<div class="grid_3">
+			<div class="editor-field">
+				<button type="submit" class="icon-disk">Gem</button>
+				<button type="submit" class="icon-accept">Gem og luk</button>
+			</div>
+		</div>
+		<div class="grid_1">
+			<div class="editor-field">
+				<button type="submit" class="icon-delete" onclick="return confirm('Er du sikker?');">Slet</button>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+}
