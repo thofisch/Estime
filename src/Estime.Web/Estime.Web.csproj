@@ -39,9 +39,6 @@
     <Reference Include="Castle.Core">
       <HintPath>..\..\packages\Castle.Core.2.5.2\lib\NET35\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="dotless.Core">
-      <HintPath>..\..\packages\dotless.1.2.2.0\lib\dotless.Core.dll</HintPath>
-    </Reference>
     <Reference Include="FluentNHibernate">
       <HintPath>..\..\packages\FluentNHibernate.1.2.0.712\lib\FluentNHibernate.dll</HintPath>
     </Reference>
@@ -252,7 +249,7 @@
     <Content Include="Views\Task\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Content\Site.less" />
+    <Content Include="Content\Site.css" />
     <Content Include="Views\Task\Opened.cshtml" />
     <Content Include="Views\Task\Closed.cshtml" />
     <Content Include="Views\Home\EditorTemplates\Duration.cshtml" />

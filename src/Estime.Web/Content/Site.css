@@ -8,14 +8,11 @@
 	clear: both;
 }
 
-.rounded-corner(@radius: 5px){
-	border-radius: @radius; 
-	-moz-border-radius: @radius; 
-	-webkit-border-radius: @radius; 
-}
 
 .header {
-	.rounded-corner(5px 5px 0px 0px);
+	border-radius: 5px 5px 0px 0px; 
+	-moz-border-radius: 5px 5px 0px 0px; 
+	-webkit-border-radius: 5px 5px 0px 0px; 
 	background-color: #fff;
 }
 
@@ -26,12 +23,13 @@
 	background-position: 10px 10px;
 	position: relative;
 
-	.user-info {
-		position: absolute; 
-		right: 20px; 
-		top: 15px; 
-		background-color: #fff;
-	}
+}
+
+.top-logo .user-info {
+	position: absolute; 
+	right: 20px; 
+	top: 15px; 
+	background-color: #fff;
 }
 
 .nav {
@@ -44,26 +42,26 @@
 	padding: 0;
 	list-style-type: none;
 
-	li {
-		float: left;
-		margin-right: 10px;
-		margin-bottom: 10px;
+}
 
-		a {
-			color: #f90;
-			display: block;
-			text-decoration: none;
-		}
+.menu li {
+	float: left;
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
 
-		a.active {
-			color: #960;
-		}
+.menu li a {
+	color: #f90;
+	display: block;
+	text-decoration: none;
+}
 
-		a:hover {
-			color: #fc9;
-		}
+.menu li a.active {
+	color: #960;
+}
 
-	}
+.menu li a:hover {
+	color: #fc9;
 }
 
 .special {
@@ -76,13 +74,16 @@
 }
 
 .footer {
-	.rounded-corner(0px 0px 5px 5px);
+	border-radius: 0px 0px 5px 5px; 
+	-moz-border-radius: 0px 0px 5px 5px; 
+	-webkit-border-radius: 0px 0px 5px 5px; 
 	text-align: center;
 	background-color: #fff;
 	border-top: 1px dashed #E2E2E2;
 	height: 50px;
 	min-height: 50px;
 	line-height: 50px;
+	margin-bottom: 10px;
 }
 
 /* FORM LAYOUT ELEMENTS   
@@ -214,7 +215,7 @@ table th {
 }
 
 
-// timepicker styles
+/* timepicker styles */
 .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
 .ui-timepicker-div dl { text-align: left; }
 .ui-timepicker-div dl dt { height: 25px; margin-bottom: -25px; }
@@ -222,26 +223,32 @@ table th {
 .ui-timepicker-div td { font-size: 90%; }
 .ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
 
-.button-icon() {
+.icon-hw-sw-add {
 	height: 25px;
 	background-repeat: no-repeat;
 	background-position: 5px center;
 	font-size: 80%;
 	font-weight: bold;
 	padding: 0 10px 0 30px;
-}
-
-.icon-hw-sw-add {
-	.button-icon();
 	background-image: url("/Content/gfx/computer_add.png");
 }
 
 .icon-hw-sw-remove {
-	.button-icon();
+	height: 25px;
+	background-repeat: no-repeat;
+	background-position: 5px center;
+	font-size: 80%;
+	font-weight: bold;
+	padding: 0 10px 0 30px;
 	background-image: url("/Content/gfx/computer_delete.png");
 }
 
 .icon-hw-sw-clear {
-	.button-icon();
+	height: 25px;
+	background-repeat: no-repeat;
+	background-position: 5px center;
+	font-size: 80%;
+	font-weight: bold;
+	padding: 0 10px 0 30px;
 	background-image: url("/Content/gfx/computer_add.png");
 }
