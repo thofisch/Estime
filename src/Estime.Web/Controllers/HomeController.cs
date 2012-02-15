@@ -8,7 +8,7 @@ namespace Estime.Web.Controllers
 	{
 		public ActionResult Index()
 		{
-			return View(new TaskInput {DurationInMinutes = 1425});
+			return View(new TaskInput());
 		}
 
 		[HttpPost]

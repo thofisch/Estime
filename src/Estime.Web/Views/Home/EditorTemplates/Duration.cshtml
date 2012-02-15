@@ -34,7 +34,7 @@
 </select>
 minutter
 
-@Html.TextBox("", Model)
+@Html.TextBox("", Model, new { style="display: none;" })
 @Html.ValidationMessage("")
 
 <script type="text/javascript">
@@ -49,8 +49,8 @@ minutter
 
 		$(function() {
 
-			$('#@ViewData.TemplateInfo.GetFullHtmlFieldId("hours")').change(totalMonths).val(@(Model / 60 * 60));
-			$('#@ViewData.TemplateInfo.GetFullHtmlFieldId("minutes")').change(totalMonths).val(@(Model % 60));
+			$('#@ViewData.TemplateInfo.GetFullHtmlFieldId("hours")').change(totalMonths).val(@(Model!=0 ? Model / 60 * 60 : 0));
+			$('#@ViewData.TemplateInfo.GetFullHtmlFieldId("minutes")').change(totalMonths).val(@(Model!=0 ? Model % 60 : 0));
 
 		});
 
