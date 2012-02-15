@@ -8,7 +8,7 @@ namespace Estime.Web.Models
 	{
 		public static DateTime GetNearestMinute(this DateTime date, int minute = 15)
 		{
-			minute = Math.Max(30, Math.Min(0, minute));
+			minute = Math.Max(30, Math.Min(5, minute));
 
 			var nearest = date.Minute / minute * minute;
 			var remainder = date.Minute % nearest;
