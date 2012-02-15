@@ -1,11 +1,13 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Estime.Web.Models;
+using Estime.Web.Controllers;
+using Estime.Web.Infrastructure.Mapping;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using FluentNHibernate.Conventions.Helpers;
 using NHibernate;
+using NHibernate.Tool.hbm2ddl;
 
 namespace Estime.Web
 {
@@ -16,6 +18,7 @@ namespace Estime.Web
 	{
 		public static void RegisterGlobalFilters(GlobalFilterCollection filters)
 		{
+			filters.Add(new SessionActionFilterAttribute());
 			//filters.Add(new HandleErrorAttribute());
 		}
 
@@ -32,6 +35,8 @@ namespace Estime.Web
 
 		protected void Application_Start()
 		{
+			AutoMapperConfiguration.Configure();
+
 			InitializeSessionFactory();
 
 			AreaRegistration.RegisterAllAreas();
@@ -55,6 +60,8 @@ namespace Estime.Web
 					mappings.Conventions.Add(ForeignKey.EndsWith("Id"));
 				})
 				.BuildConfiguration();
+
+			new SchemaExport(configuration).Execute(true, true, false);
 
 			SessionFactory = configuration.BuildSessionFactory();
 		}

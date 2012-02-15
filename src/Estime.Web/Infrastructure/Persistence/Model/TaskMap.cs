@@ -1,0 +1,44 @@
+﻿using Estime.Web.Models;
+using FluentNHibernate.Mapping;
+
+namespace Estime.Web.Infrastructure.Persistence.Model
+{
+	public sealed class TaskMap : ClassMap<Task>
+	{
+		public TaskMap()
+		{
+			Id(x => x.Id).GeneratedBy.GuidComb();
+			References(x => x.Client).Not.Nullable();
+			References(x => x.Consultant).Not.Nullable();
+			Map(x => x.Timestamp).Not.Nullable();
+			Map(x => x.DurationInMinutes).Not.Nullable();
+			Map(x => x.Type).Not.Nullable().CustomType<TimeType>();
+			Map(x => x.Description).Not.Nullable().Length(8000);
+			Map(x => x.Mileage).Not.Nullable();
+			Map(x => x.Status).Not.Nullable().CustomType<TaskStatus>();
+			HasMany(x => x.Wares).Component(c => c.Map(x => x.Name).Not.Nullable().Length(255));
+			Map(x => x.CreatedAt).Not.Nullable().Not.Update();
+			Map(x => x.CreatedBy).Not.Nullable().Not.Update();
+			Map(x => x.UpdatedAt).Not.Nullable();
+			Map(x => x.UpdatedBy).Not.Nullable();
+		}
+	}
+
+	public sealed class ClientMap : ClassMap<Client>
+	{
+		public ClientMap()
+		{
+			Id(x => x.Id).GeneratedBy.GuidComb();
+			Map(x => x.Name).Not.Nullable().Length(255);
+		}
+	}
+
+	public sealed class ConsultantMap : ClassMap<Consultant>
+	{
+		public ConsultantMap()
+		{
+			Id(x => x.Id).GeneratedBy.GuidComb();
+			Map(x => x.Name).Not.Nullable().Length(255);
+		}
+	}
+}

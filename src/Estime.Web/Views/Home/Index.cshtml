@@ -1,4 +1,4 @@
-﻿@model Estime.Web.Models.TaskInput
+﻿@model Estime.Web.ViewModels.TaskInput
 @{
     ViewBag.Title = "Registrer opgave";
 }
@@ -59,8 +59,7 @@
 	(function($) {
 		$(function() {
 			$('#Timestamp').datetimepicker({ stepMinute: 5 });
-
-			$("#Consultant").autocomplete({ source: '@Url.Action("Find", "Consultant")', minLength: 3 });
+			$("#ConsultantName").autocomplete({ source: '@Url.Action("Find", "Consultant")', minLength: 3 });
 			$("#ClientName").autocomplete({ source: '@Url.Action("Find", "Client")', minLength: 2 });
 			$("#ware").keyup(function(e) {
 				e = e || event;
@@ -82,11 +81,11 @@
 	<div class="container_4">
 		<div class="grid_4">
 			<div class="editor-label">
-				@Html.LabelFor(m => m.Consultant)
+				@Html.LabelFor(m => m.ConsultantName)
 			</div>
 			<div class="editor-field">
-				@Html.TextBoxFor(m => m.Consultant)
-				@Html.ValidationMessageFor(m => m.Consultant)
+				@Html.TextBoxFor(m => m.ConsultantName)
+				@Html.ValidationMessageFor(m => m.ConsultantName)
 			</div>
 		</div>
 
@@ -157,8 +156,8 @@
 				<button class="icon-hw-sw-clear" onclick="return $wares.clear()">Ryd</button>
 			</div>
 			<div class="editor-field">
-				<select id="WareList" name="WareList" multiple="multiple" style="width: 435px; height: 125px;"></select>
-				@Html.Hidden("SelectedWares", string.Join("¤", Model.Wares))
+				@Html.ListBox("WareList", Model.Wares, new {style="width: 435px; height: 125px;"})
+				@Html.HiddenFor(x => x.SelectedWares)
 			</div>
 		</div>
 
