@@ -1,5 +1,7 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
+using Estime.Web.Models;
+using Estime.Web.Util;
 
 namespace Estime.Web.Controllers
 {
@@ -9,29 +11,19 @@ namespace Estime.Web.Controllers
 		{
 			term = term.ToLower();
 
-			var consultants = new[]
-			{
-				new Consultant {Id = 1, Name = "Anders Vedel"},
-				new Consultant {Id = 2, Name = "Thomas Fischer"},
-				new Consultant {Id = 3, Name = "Rasmus Burkal"},
-			};
+			var consultants = Session.QueryOver<Consultant>().List();
 
-			var projection = from consultant in consultants
-				where consultant.Name.ToLower().Contains(term)
+			var projections = from consultant in consultants
+				let name = consultant.Name.ToLower()
+				let initials = name.GetInitials()
+				where name.Contains(term) || initials==term
 				select new
 				{
-					id = consultant.Id,
 					label = consultant.Name,
 					value = consultant.Name
 				};
 
-			return Json(projection.ToList(), JsonRequestBehavior.AllowGet);
+			return Json(projections.ToList(), JsonRequestBehavior.AllowGet);
 		}
-	}
-
-	public class Consultant
-	{
-		public int Id { get; set; }
-		public string Name { get; set; }
 	}
 }

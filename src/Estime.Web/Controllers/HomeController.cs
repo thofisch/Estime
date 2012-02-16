@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
-using Estime.Web.Infrastructure;
-using Estime.Web.Infrastructure.Mapping;
 using Estime.Web.Models;
 using Estime.Web.ViewModels;
 
@@ -23,24 +21,19 @@ namespace Estime.Web.Controllers
 			return AutoMapView<TaskInput>(View(model ?? new Task()));
 		}
 
-		protected AutoMapViewResult AutoMapView<TDestination>(ViewResult viewResult)
-		{
-			return new AutoMapViewResult(viewResult.ViewData.Model.GetType(), typeof(TDestination), viewResult);
-		}
-
 		[HttpPost]
 		public ActionResult Index(Guid? id, TaskInput input)
 		{
-			var consultant = Session.QueryOver<Models.Consultant>().Where(x => x.Name==input.ConsultantName).SingleOrDefault();
+			var consultant = Session.QueryOver<Consultant>().Where(x => x.Name==input.ConsultantName).SingleOrDefault();
 			if( consultant==null )
 			{
-				consultant = new Models.Consultant {Name = input.ConsultantName};
+				consultant = new Consultant {Name = input.ConsultantName};
 				Session.Save(consultant);
 			}
-			var client = Session.QueryOver<Models.Client>().Where(x => x.Name==input.ClientName).SingleOrDefault();
+			var client = Session.QueryOver<Client>().Where(x => x.Name==input.ClientName).SingleOrDefault();
 			if( client==null )
 			{
-				client = new Models.Client {Name = input.ClientName};
+				client = new Client {Name = input.ClientName};
 				Session.Save(client);
 			}
 
@@ -60,9 +53,22 @@ namespace Estime.Web.Controllers
 				UpdatedBy = "Me",
 			};
 
+			var quantityRegex = new Regex(@"^(\d+)x", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
 			foreach(var name in input.SelectedWares.Split('¤'))
 			{
-				task.AddWare(HttpUtility.HtmlDecode(name));
+				var ware = HttpUtility.HtmlDecode(name);
+				var quantity = 1;
+				var match = quantityRegex.Match(ware);
+				if( match.Success )
+				{
+					var value = match.Groups[0].Value;
+					var x = value.TrimEnd("xX".ToCharArray());
+					quantity = int.Parse(x);
+					ware = ware.Substring(value.Length).Trim();
+				}
+
+				task.AddWare(ware, quantity);
 			}
 
 			Session.Save(task);

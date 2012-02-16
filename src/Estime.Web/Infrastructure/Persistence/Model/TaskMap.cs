@@ -16,7 +16,11 @@ namespace Estime.Web.Infrastructure.Persistence.Model
 			Map(x => x.Description).Not.Nullable().Length(8000);
 			Map(x => x.Mileage).Not.Nullable();
 			Map(x => x.Status).Not.Nullable().CustomType<TaskStatus>();
-			HasMany(x => x.Wares).Component(c => c.Map(x => x.Name).Not.Nullable().Length(255));
+			HasMany(x => x.Wares).Component(c =>
+			{
+				c.Map(x => x.Name).Not.Nullable().Length(255);
+				c.Map(x => x.Quantity).Not.Nullable().Default("1");
+			});
 			Map(x => x.CreatedAt).Not.Nullable().Not.Update();
 			Map(x => x.CreatedBy).Not.Nullable().Not.Update();
 			Map(x => x.UpdatedAt).Not.Nullable();

@@ -10,8 +10,8 @@ namespace Estime.Web.Infrastructure.Mapping
 		{
 			return new SelectListItem
 			{
-				Text = source.Name,
-				Value = source.Name,
+				Text = string.Format("{0}x{1}", source.Quantity, source.Name),
+				Value = string.Format("{0}x{1}", source.Quantity, source.Name),
 				Selected = false
 			};
 		}

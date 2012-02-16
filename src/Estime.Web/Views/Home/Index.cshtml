@@ -58,16 +58,16 @@
 
 	(function($) {
 		$(function() {
-			$('#Timestamp').datetimepicker({ stepMinute: 5 });
-			$("#ConsultantName").autocomplete({ source: '@Url.Action("Find", "Consultant")', minLength: 3 });
+			$("#ConsultantName").autocomplete({ source: '@Url.Action("Find", "Consultant")', minLength: 2 });
 			$("#ClientName").autocomplete({ source: '@Url.Action("Find", "Client")', minLength: 2 });
+			$('#Timestamp').datetimepicker({ stepMinute: 5 });
 			$("#ware").keyup(function(e) {
 				e = e || event;
 				var keyCode = e.keyCode;
 				if (keyCode == 13) {
 					$wares.add();
 				}
-			}).autocomplete({ source: '@Url.Action("Find", "Ware")', minLength: 3 });
+			}).autocomplete({ source: '@Url.Action("Find", "Ware")', minLength: 4 });
 		});
 	})(jQuery);
 
@@ -154,6 +154,7 @@
 				<button class="icon-hw-sw-add" onclick="return $wares.add()">Tilføj</button>
 				<button class="icon-hw-sw-remove" onclick="return $wares.remove()">Fjern</button>
 				<button class="icon-hw-sw-clear" onclick="return $wares.clear()">Ryd</button>
+				<i style="color: #999;">Eksempel: 5xWindows 7 Home Edition</i>
 			</div>
 			<div class="editor-field">
 				@Html.ListBox("WareList", Model.Wares, new {style="width: 435px; height: 125px;"})

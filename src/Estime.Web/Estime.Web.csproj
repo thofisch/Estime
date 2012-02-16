@@ -45,6 +45,9 @@
     <Reference Include="FluentNHibernate">
       <HintPath>..\..\packages\FluentNHibernate.1.2.0.712\lib\FluentNHibernate.dll</HintPath>
     </Reference>
+    <Reference Include="HibernatingRhinos.Profiler.Appender.v4.0">
+      <HintPath>C:\Users\twf\Desktop\NHibernate.Profiler-Build-920\HibernatingRhinos.Profiler.Appender.v4.0.dll</HintPath>
+    </Reference>
     <Reference Include="Iesi.Collections">
       <HintPath>..\..\packages\Iesi.Collections.3.1.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
     </Reference>
@@ -93,6 +96,7 @@
     <Compile Include="Infrastructure\Persistence\Model\TaskMap.cs" />
     <Compile Include="Models\Consultant.cs" />
     <Compile Include="Models\Client.cs" />
+    <Compile Include="Util\StringExtensions.cs" />
     <Compile Include="ViewModels\LogOnModel.cs" />
     <Compile Include="Models\Task.cs" />
     <Compile Include="ViewModels\TaskInput.cs" />
@@ -253,9 +257,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>

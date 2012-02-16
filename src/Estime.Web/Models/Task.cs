@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Estime.Web.Util;
 
 namespace Estime.Web.Models
@@ -9,7 +10,7 @@ namespace Estime.Web.Models
 		public Task()
 		{
 			Timestamp = DateTime.Now.GetNearestMinute();
-			Wares = new List<Ware> {new Ware("PC"), new Ware("27\" Skærm")};
+			Wares = new List<Ware> {new Ware("PC", 1), new Ware("27\" Skærm", 2)};
 		}
 
 		public virtual Guid Id { get; set; }
@@ -27,13 +28,16 @@ namespace Estime.Web.Models
 		public virtual DateTime UpdatedAt { get; set; }
 		public virtual string UpdatedBy { get; set; }
 
-		public virtual void AddWare(string name)
+		public virtual void AddWare(string name, int quantity)
 		{
-			var ware = new Ware(name);
-
-			if( !Wares.Contains(ware))
+			var ware = Wares.FirstOrDefault(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+			if( ware!=null )
 			{
-				Wares.Add(ware);
+				ware.UpdateQuantity(ware.Quantity + quantity);
+			}
+			else
+			{
+				Wares.Add(new Ware(name, quantity));
 			}
 		}
 	}

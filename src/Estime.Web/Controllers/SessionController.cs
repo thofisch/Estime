@@ -1,5 +1,6 @@
 using System.Web;
 using System.Web.Mvc;
+using Estime.Web.Infrastructure.Mapping;
 using NHibernate;
 
 namespace Estime.Web.Controllers
@@ -14,6 +15,11 @@ namespace Estime.Web.Controllers
 			{
 				return base.Session;
 			}
+		}
+
+		protected AutoMapViewResult AutoMapView<TDestination>(ViewResult viewResult)
+		{
+			return new AutoMapViewResult(viewResult.ViewData.Model.GetType(), typeof(TDestination), viewResult);
 		}
 	}
 

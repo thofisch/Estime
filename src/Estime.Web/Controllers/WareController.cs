@@ -1,5 +1,8 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
+using Estime.Web.Models;
+using Estime.Web.Util;
+using NHibernate.Criterion;
 
 namespace Estime.Web.Controllers
 {
@@ -7,31 +10,24 @@ namespace Estime.Web.Controllers
 	{
 		public ActionResult Find(string term)
 		{
-			term = term.ToLower();
+			var quantityAndName = term.GetQuantityAndName();
 
-			var wares = new[]
-			{
-				new Ware {Id = 1, Name = "skærm"},
-				new Ware {Id = 2, Name = "tastatur"},
-				new Ware {Id = 3, Name = "windows 7"},
-			};
+			Ware wareAlias = null;
+			var wares = Session.QueryOver<Task>()
+				.Inner.JoinAlias(x => x.Wares, () => wareAlias)
+				.WhereRestrictionOn(() => wareAlias.Name).IsInsensitiveLike(quantityAndName.Item2, MatchMode.Anywhere)
+				.SelectList(list => list.SelectGroup(() => wareAlias.Name))
+				.List<string>();
 
 			var projection = from ware in wares
-				where ware.Name.Contains(term)
+				let w = string.Format("{0}x{1}", quantityAndName.Item1, ware)
 				select new
 				{
-					id = ware.Id,
-					label = ware.Name,
-					value = ware.Name
+					label = w,
+					value = w
 				};
 
 			return Json(projection.ToList(), JsonRequestBehavior.AllowGet);
 		}
-	}
-
-	public class Ware
-	{
-		public int Id { get; set; }
-		public string Name { get; set; }
 	}
 }

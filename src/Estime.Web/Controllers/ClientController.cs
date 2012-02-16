@@ -1,6 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
+using Estime.Web.Models;
+using NHibernate.Criterion;
 
 namespace Estime.Web.Controllers
 {
@@ -8,29 +9,18 @@ namespace Estime.Web.Controllers
 	{
 		public ActionResult Find(string term)
 		{
-			var clients = new[]
-			{
-				new Client {Id = 1, Name = "Dong"},
-				new Client {Id = 1, Name = "Microsoft"},
-				new Client {Id = 1, Name = "Mærsk"},
-			};
+			var clients = Session.QueryOver<Client>()
+				.WhereRestrictionOn(x => x.Name).IsInsensitiveLike(term, MatchMode.Start)
+				.List();
 
-			var projection = from client in clients
-				where client.Name.StartsWith(term, StringComparison.OrdinalIgnoreCase)
+			var projections = from client in clients
 				select new
 				{
-					id = client.Id,
 					label = client.Name,
 					value = client.Name
 				};
 
-			return Json(projection.ToList(), JsonRequestBehavior.AllowGet);
+			return Json(projections.ToList(), JsonRequestBehavior.AllowGet);
 		}
-	}
-
-	public class Client
-	{
-		public int Id { get; set; }
-		public string Name { get; set; }
 	}
 }

@@ -61,9 +61,11 @@ namespace Estime.Web
 				})
 				.BuildConfiguration();
 
-			new SchemaExport(configuration).Execute(true, true, false);
+			//new SchemaExport(configuration).Execute(true, true, false);
 
 			SessionFactory = configuration.BuildSessionFactory();
+
+			HibernatingRhinos.Profiler.Appender.NHibernate.NHibernateProfiler.Initialize();
 		}
 	}
 }
