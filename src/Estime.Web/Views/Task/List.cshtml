@@ -1,0 +1,38 @@
+﻿@model IList<Estime.Web.Controllers.TaskController.ClientListViewModel>
+
+@{
+	ViewBag.Title = "Åbne";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<table style="width: 100%">
+	<thead>
+		<tr>
+			<th>Konsulent</th>
+			<th>Kunde</th>
+			<th>Tidspunkt</th>
+			<th>Tid</th>
+			<th>Tidstype</th>
+			<th>Kørsel</th>
+			<th>Kort beskrivelse</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach(var task in Model)
+		{
+			<tr onclick="location.href = '@Url.Action("Edit", "Task", new { task.Id })'" style="cursor: pointer;" onmouseover="$(this).addClass('selected');" onmouseout="$(this).removeClass('selected');" title="Se detaljer">
+				<td>@task.ConsultantName</td>
+				<td>@task.ClientName</td>
+				<td>@task.Timestamp.ToString("yyyy-MM-dd HH:mm")</td>
+				<td>@task.DurationInMinutes</td>
+				<td>@task.Type</td>
+				<td><img src="@Url.Content(task.Mileage ? "/Content/gfx/car.png" : "/Content/gfx/car-inactive.png")" alt=""/></td>
+				<td>@task.Description</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+<script type="text/javascript">
+</script>

@@ -10,7 +10,7 @@ namespace Estime.Web.Models
 		public Task()
 		{
 			Timestamp = DateTime.Now.GetNearestMinute();
-			Wares = new List<Ware> {new Ware("PC", 1), new Ware("27\" Skærm", 2)};
+			Wares = new List<Ware>();
 		}
 
 		public virtual Guid Id { get; set; }

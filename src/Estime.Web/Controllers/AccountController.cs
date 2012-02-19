@@ -24,7 +24,7 @@ namespace Estime.Web.Controllers
 					{
 						return Redirect(returnUrl);
 					}
-					return RedirectToAction("Index", "Home");
+					return RedirectToAction("Index", "Task");
 				}
 				ModelState.AddModelError("", "The user name or password provided is incorrect.");
 			}
@@ -37,7 +37,7 @@ namespace Estime.Web.Controllers
 		{
 			FormsAuthentication.SignOut();
 
-			return RedirectToAction("Index", "Home");
+			return RedirectToAction("Index", "Task");
 		}
 	}
 }

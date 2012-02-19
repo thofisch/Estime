@@ -1,0 +1,22 @@
+﻿@model IList<Estime.Web.Models.Client>
+@{
+	ViewBag.Title = "Kunder";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<table style="width: 100%">
+	<thead>
+		<tr>
+			<th>Navn</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach(var client in Model)
+		{
+			<tr onclick="location.href = '@Url.Action("Edit", "Client", new { client.Id })'" style="cursor: pointer;" onmouseover="$(this).addClass('selected');" onmouseout="$(this).removeClass('selected');" title="Se detaljer">
+				<td>@client.Name</td>
+			</tr>
+		}
+	</tbody>
+</table>

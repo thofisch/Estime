@@ -83,7 +83,6 @@
     <Compile Include="Controllers\ConsultantController.cs" />
     <Compile Include="Controllers\SessionController.cs" />
     <Compile Include="Controllers\WareController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TaskController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -111,6 +110,8 @@
     <Content Include="Content\960gs.css" />
     <Content Include="Content\gfx\accept.png" />
     <Content Include="Content\gfx\calendar.png" />
+    <Content Include="Content\gfx\car-inactive.png" />
+    <Content Include="Content\gfx\car.png" />
     <Content Include="Content\gfx\clock.png" />
     <Content Include="Content\gfx\computer_add.png" />
     <Content Include="Content\gfx\computer_delete.png" />
@@ -251,24 +252,31 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Account\LogOn.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Task\Edit.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_LogOnPartial.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Task\Index.cshtml" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Views\Task\List.cshtml" />
+    <Content Include="Views\Task\EditorTemplates\Duration.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Site.css" />
-    <Content Include="Views\Task\Opened.cshtml" />
-    <Content Include="Views\Task\Closed.cshtml" />
-    <Content Include="Views\Home\EditorTemplates\Duration.cshtml" />
+    <Content Include="Views\Consultant\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Consultant\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Client\List.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Client\Edit.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

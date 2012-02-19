@@ -214,6 +214,12 @@ table th {
     width: 6em;
 }
 
+.field-hint-message {
+	background-color: #ffe;
+	border: 1px solid #f93;
+	padding: 3px;
+	display: inline-block;
+}
 
 /* timepicker styles */
 .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
@@ -251,4 +257,9 @@ table th {
 	font-weight: bold;
 	padding: 0 10px 0 30px;
 	background-image: url("/Content/gfx/computer_add.png");
+}
+
+tr.selected {
+	background-color: #ddd;	
+
 }

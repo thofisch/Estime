@@ -1,0 +1,17 @@
+﻿@model Estime.Web.Models.Consultant
+
+@{
+	ViewBag.Title = "title";
+}
+
+<h2>title</h2>
+
+@using(Html.BeginForm())
+{
+
+	@Html.LabelFor(x => x.Name)
+	@Html.EditorFor(x => x.Name)
+	@Html.ValidationMessageFor(x => x.Name)
+
+	<button type="submit">Gem</button>
+}
