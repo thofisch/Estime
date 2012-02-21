@@ -1,6 +1,8 @@
 using System.Web;
 using System.Web.Mvc;
+using Estime.Web.Infrastructure.Commands;
 using Estime.Web.Infrastructure.Mapping;
+using Estime.Web.Infrastructure.Persistence.Queries;
 using NHibernate;
 
 namespace Estime.Web.Controllers
@@ -21,52 +23,24 @@ namespace Estime.Web.Controllers
 		{
 			return new AutoMapViewResult(viewResult.ViewData.Model.GetType(), typeof(TDestination), viewResult);
 		}
-	}
 
-	public class SessionActionFilterAttribute : ActionFilterAttribute
-	{
-		public override void OnActionExecuting(ActionExecutingContext filterContext)
+		protected TResult Query<TResult>(Query<TResult> query)
 		{
-			var controller = filterContext.Controller as SessionController;
-			if( controller==null )
-			{
-				return;
-			}
-
-			var session = MvcApplication.SessionFactory.OpenSession();
-			session.BeginTransaction();
-			controller.Session = session;
+			query.Session = Session;
+			return query.Execute();
 		}
 
-		public override void OnResultExecuted(ResultExecutedContext filterContext)
+		protected void Execute(Command command)
 		{
-			var controller = filterContext.Controller as SessionController;
-			if( controller==null )
-			{
-				return;
-			}
+			command.Session = Session;
+			command.Execute();
+		}
 
-			var session = controller.Session;
-			if( session==null )
-			{
-				return;
-			}
-
-			var transaction = session.Transaction;
-			if( transaction!=null && transaction.IsActive )
-			{
-				if( filterContext.Exception!=null )
-				{
-					transaction.Rollback();
-				}
-				else
-				{
-					transaction.Commit();
-				}
-				transaction.Dispose();
-			}
-
-			session.Dispose();
+		protected TResult Execute<TResult>(Command<TResult> command)
+		{
+			command.Session = Session;
+			command.Execute();
+			return command.Result;
 		}
 	}
 }

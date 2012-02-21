@@ -1,8 +1,7 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
-using Estime.Web.Models;
+using Estime.Web.Infrastructure.Persistence.Queries;
 using Estime.Web.Util;
-using NHibernate.Criterion;
 
 namespace Estime.Web.Controllers
 {
@@ -11,23 +10,10 @@ namespace Estime.Web.Controllers
 		public ActionResult Find(string term)
 		{
 			var quantityAndName = term.GetQuantityAndName();
+			var wares = Query(new WareQuery(quantityAndName));
+			var models = from ware in wares select new {label = ware, value = ware};
 
-			Ware wareAlias = null;
-			var wares = Session.QueryOver<Task>()
-				.Inner.JoinAlias(x => x.Wares, () => wareAlias)
-				.WhereRestrictionOn(() => wareAlias.Name).IsInsensitiveLike(quantityAndName.Item2, MatchMode.Anywhere)
-				.SelectList(list => list.SelectGroup(() => wareAlias.Name))
-				.List<string>();
-
-			var projection = from ware in wares
-				let w = string.Format("{0}x{1}", quantityAndName.Item1, ware)
-				select new
-				{
-					label = w,
-					value = w
-				};
-
-			return Json(projection.ToList(), JsonRequestBehavior.AllowGet);
+			return Json(models.ToList(), JsonRequestBehavior.AllowGet);
 		}
 	}
 }

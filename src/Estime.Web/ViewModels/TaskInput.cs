@@ -13,6 +13,9 @@ namespace Estime.Web.ViewModels
 			Wares = new List<SelectListItem>();
 		}
 
+		[HiddenInput(DisplayValue = false)]
+		public Guid? Id { get; set; }
+
 		[Required(ErrorMessage = "Konsulent skal udfyldes")]
 		[Display(Name = "Konsulent")]
 		public string ConsultantName { get; set; }

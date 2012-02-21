@@ -24,7 +24,7 @@ namespace Estime.Web.Controllers
 		public ActionResult Edit(Client client)
 		{
 			Session.SaveOrUpdate(client);
-		
+
 			return RedirectToAction("New");
 		}
 
@@ -34,6 +34,7 @@ namespace Estime.Web.Controllers
 
 			return View(clients);
 		}
+
 		public ActionResult Find(string term)
 		{
 			var clients = Session.QueryOver<Client>()
@@ -41,10 +42,11 @@ namespace Estime.Web.Controllers
 				.List();
 
 			var projections = from client in clients
+				let name = client.Name
 				select new
 				{
-					label = client.Name,
-					value = client.Name
+					label = name,
+					value = name
 				};
 
 			return Json(projections.ToList(), JsonRequestBehavior.AllowGet);

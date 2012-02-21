@@ -81,6 +81,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ClientController.cs" />
     <Compile Include="Controllers\ConsultantController.cs" />
+    <Compile Include="Controllers\SessionActionFilterAttribute.cs" />
     <Compile Include="Controllers\SessionController.cs" />
     <Compile Include="Controllers\WareController.cs" />
     <Compile Include="Controllers\TaskController.cs" />
@@ -88,14 +89,20 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="HtmlHelpers\HtmlHelperExtensions.cs" />
+    <Compile Include="Infrastructure\Commands\Command.cs" />
+    <Compile Include="Infrastructure\Commands\CreateTaskCommand.cs" />
     <Compile Include="Infrastructure\Mapping\AutoMapperConfiguration.cs" />
     <Compile Include="Infrastructure\Mapping\AutoMapViewResult.cs" />
     <Compile Include="Infrastructure\Mapping\ViewModelProfile.cs" />
     <Compile Include="Infrastructure\Mapping\WareConverter.cs" />
     <Compile Include="Infrastructure\Persistence\Model\TaskMap.cs" />
+    <Compile Include="Infrastructure\Persistence\Queries\Query.cs" />
+    <Compile Include="Infrastructure\Persistence\Queries\TaskListQuery.cs" />
+    <Compile Include="Infrastructure\Persistence\Queries\WareQuery.cs" />
     <Compile Include="Models\Consultant.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Util\StringExtensions.cs" />
+    <Compile Include="ViewModels\TaskListViewModel.cs" />
     <Compile Include="ViewModels\LogOnModel.cs" />
     <Compile Include="Models\Task.cs" />
     <Compile Include="ViewModels\TaskInput.cs" />
@@ -278,6 +285,7 @@
   <ItemGroup>
     <Content Include="Views\Client\Edit.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
