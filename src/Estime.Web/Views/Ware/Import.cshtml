@@ -1,0 +1,19 @@
+﻿@model dynamic
+
+@{
+	ViewBag.Title = "Importer varekartotek";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using(Html.BeginForm("Import", "Ware", FormMethod.Post, new {enctype = "multipart/form-data"}))
+{
+	<div class="editor-label">
+		<label for="file">Varekartotek</label>
+	</div>	<div class="editor-field">
+		<input type="file" id="file" name="file" />
+	</div>
+	<p>
+		<input type="submit" value="Importer" />
+	</p>
+}

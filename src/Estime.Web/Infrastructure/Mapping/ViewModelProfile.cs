@@ -10,12 +10,16 @@ namespace Estime.Web.Infrastructure.Mapping
 	{
 		protected override void Configure()
 		{
+			CreateMap<Client, ClientInput>();
+			CreateMap<Consultant, ConsultantInput>();
+
 			CreateMap<Task, TaskInput>()
+				.ForMember(dst => dst.Closed, opt => opt.ResolveUsing(x => x.Status==TaskStatus.Closed))
 				.AfterMap((src, dst) =>
 				{
 					dst.SelectedWares = string.Join("¤", dst.Wares.Select(x => x.Text));
 				});
-			CreateMap<Ware, SelectListItem>().ConvertUsing<WareConverter>();
+			CreateMap<TaskWare, SelectListItem>().ConvertUsing<WareConverter>();
 		}
 	}
 }

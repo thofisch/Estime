@@ -1,17 +1,51 @@
-﻿@model Estime.Web.Models.Client
+﻿@using Estime.Web.Models
+@model Estime.Web.ViewModels.ClientInput
 
-@{
-	ViewBag.Title = "title";
+<h2>@ViewBag.Title</h2>
+
+@using(Html.BeginForm("Edit", "Client"))
+{
+	@Html.EditorForModel()
+	
+	<p>
+		<button type="submit">Gem</button>
+		<a href="@Url.Action("List")">Fortryd</a>
+	</p>
 }
 
-<h2>title</h2>
-
-@using(Html.BeginForm())
+@if( Model.Sku!=null )
 {
+	<hr/>
 
-	@Html.LabelFor(x => x.Name)
-	@Html.EditorFor(x => x.Name)
-	@Html.ValidationMessageFor(x => x.Name)
+	<h2>Projekter</h2>
 
-	<button type="submit">Gem</button>
+	if( ViewBag.Projects.Count>0)
+	{
+		<table style="width: 100%">
+			<thead>
+				<tr>
+					<th style="width: 100%;">Navn</th>
+					<th style="white-space: nowrap; text-align: right;">Ekstern Id</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach(Project project in ViewBag.Projects)
+				{
+					<tr onclick="  location.href = '@Url.Action("Edit", "Project", new {project.Id})'" style="cursor: pointer;" onmouseover="$(this).addClass('selected');" onmouseout="$(this).removeClass('selected');" title="Se detaljer">
+						<td>@project.Name</td>
+						<td style="white-space: nowrap; text-align: right;">@project.Sku</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	}
+	<p>
+		<a href="@Url.Action("New", "Project", new { clientId = Model.Id })">Tilføj projekt</a>
+	</p>
+}
+
+@section AdditionalScripts
+{
+	<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"> </script>
+	<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")"> </script>
 }

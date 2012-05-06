@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Estime.Web.Models
+namespace Estime.Web.ViewModels
 {
 	public class LogOnModel
 	{

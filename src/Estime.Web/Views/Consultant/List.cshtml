@@ -8,7 +8,8 @@
 <table style="width: 100%">
 	<thead>
 		<tr>
-			<th>Navn</th>
+			<th style="width: 100%;">Navn</th>
+			<th style="white-space: nowrap; text-align: right;">Ekstern Id</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -16,7 +17,13 @@
 		{
 			<tr onclick="location.href = '@Url.Action("Edit", "Consultant", new { consultant.Id })'" style="cursor: pointer;" onmouseover="$(this).addClass('selected');" onmouseout="$(this).removeClass('selected');" title="Se detaljer">
 				<td>@consultant.Name</td>
+				<td style="white-space: nowrap; text-align: right;">@consultant.Sku</td>
 			</tr>
 		}
 	</tbody>
 </table>
+
+<p>
+	<a href="@Url.Action("New")">Opret ny</a>
+</p>
+

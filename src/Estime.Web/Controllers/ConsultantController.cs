@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Web.Mvc;
 using Estime.Web.Models;
-using Estime.Web.Util;
+using Estime.Web.ViewModels;
 
 namespace Estime.Web.Controllers
 {
@@ -10,48 +9,53 @@ namespace Estime.Web.Controllers
 	{
 		public ActionResult New()
 		{
-			return View("Edit", new Consultant());
+			ViewBag.Title = "Opret ny konsulent";
+
+			return View("Edit", new ConsultantInput());
 		}
 
 		public ActionResult Edit(Guid id)
 		{
+			ViewBag.Title = "Rediger konsulent";
+
 			var consultant = Session.Get<Consultant>(id);
 
-			return View(consultant);
+			return AutoMapView<ConsultantInput>(View("Edit", consultant));
 		}
 
 		[HttpPost]
-		public ActionResult Edit(Consultant consultant)
+		public ActionResult Edit(Guid? id, ConsultantInput input)
 		{
-			Session.SaveOrUpdate(consultant);
-		
-			return RedirectToAction("New");
+			if( !ModelState.IsValid )
+			{
+				return View("Edit", input);
+			}
+
+			if( id.HasValue )
+			{
+				var consultant = Session.Get<Consultant>(id.Value);
+				consultant.Sku = input.Sku;
+				consultant.Name = input.Name;
+			}
+			else
+			{
+				var consultant = new Consultant
+				{
+					Sku = input.Sku,
+					Name = input.Name
+				};
+
+				Session.Save(consultant);
+			}
+
+			return RedirectToAction("List");
 		}
 
 		public ActionResult List()
 		{
-			var consultants = Session.QueryOver<Consultant>().OrderBy(x => x.Name).Desc.List();
+			var consultants = Session.QueryOver<Consultant>().OrderBy(x => x.Name).Asc.List();
 
 			return View(consultants);
-		}
-
-		public ActionResult Find(string term)
-		{
-			term = term.ToLower();
-
-			var consultants = Session.QueryOver<Consultant>().OrderBy(x => x.Name).Desc.List();
-
-			var projections = from consultant in consultants
-				let name = consultant.Name.ToLower()
-				let initials = name.GetInitials()
-				where name.Contains(term) || initials==term
-				select new
-				{
-					label = consultant.Name,
-					value = consultant.Name
-				};
-
-			return Json(projections.ToList(), JsonRequestBehavior.AllowGet);
 		}
 	}
 }

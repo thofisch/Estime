@@ -1,0 +1,90 @@
+﻿@{
+    ViewBag.Title = "Mobile Home Page";
+    Layout = "~/Views/Shared/_Layout.Mobile.cshtml";
+}
+
+<div data-role="page" id="page1">
+	<div data-theme="a" data-role="header">
+		<h3>
+			Tidsregistrering
+		</h3>
+		<div data-role="navbar" data-iconpos="top">
+			<ul>
+				<li>
+					<a href="#page1" data-theme="" data-icon="" class="ui-btn-active">
+						Button
+					</a>
+				</li>
+				<li>
+					<a href="#" data-theme="" data-icon="">
+						Button
+					</a>
+				</li>
+				<li>
+					<a href="#" data-theme="" data-icon="">
+						Button
+					</a>
+				</li>
+				<li>
+					<a href="#" data-theme="" data-icon="">
+						Button
+					</a>
+				</li>
+				<li>
+					<a href="#" data-theme="" data-icon="">
+						Button
+					</a>
+				</li>
+			</ul>
+		</div>
+		<form url="" action="POST">
+			<div data-role="fieldcontain">
+				<label for="selectmenu1">
+					Konsulent:
+				</label>
+				<select name="selectmenu1" id="selectmenu1">
+					<option value="option1">
+						Option 1
+					</option>
+					<option value="">
+						Option
+					</option>
+					<option value="">
+						Option
+					</option>
+				</select>
+			</div>
+			<div data-role="fieldcontain">
+				<label for="selectmenu2">
+					Kunde
+				</label>
+				<select name="selectmenu2" id="selectmenu2">
+					<option value="option1">
+						Option 1
+					</option>
+				</select>
+			</div>
+			<div data-role="fieldcontain">
+				<label for="date3">Datetime</label>
+				<input type="text" name="date3" id="date3" class="mobiscroll" />
+			</div>
+		</form>
+	</div>
+	<div data-role="content">
+	</div>
+</div>
+
+<script type="text/javascript">
+	// App custom javascript
+
+	$(function () {
+
+		$('#date3').scroller({ 
+			preset: 'datetime',
+			ampm: false 
+		});
+
+	});
+
+
+</script>

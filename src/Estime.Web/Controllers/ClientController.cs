@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using Estime.Web.Infrastructure.Persistence.Queries;
 using Estime.Web.Models;
-using NHibernate.Criterion;
+using Estime.Web.ViewModels;
 
 namespace Estime.Web.Controllers
 {
@@ -10,46 +11,74 @@ namespace Estime.Web.Controllers
 	{
 		public ActionResult New()
 		{
-			return View("Edit", new Client());
+			ViewBag.Title = "Opret ny kunde";
+
+			return View("Edit", new ClientInput());
 		}
 
 		public ActionResult Edit(Guid id)
 		{
-			var client = Session.Get<Client>(id);
+			ViewBag.Title = "Rediger kunde";
 
-			return View(client);
+			var client = Session
+				.QueryOver<Client>()
+				.Where(x => x.Id==id)
+				.Fetch(x => x.Projects).Eager
+				.SingleOrDefault();
+
+			ViewBag.Projects = client.Projects.Where(x => !x.StandardProject).ToList();
+
+			var clientInput = new ClientInput
+			{
+				Id = client.Id,
+				Sku = client.Projects.First(x => x.StandardProject).Sku,
+				Name = client.Name
+			};
+
+			return View(clientInput);
 		}
 
 		[HttpPost]
-		public ActionResult Edit(Client client)
+		public ActionResult Edit(Guid? id, ClientInput input)
 		{
-			Session.SaveOrUpdate(client);
+			if( !ModelState.IsValid )
+			{
+				return View("Edit", input);
+			}
 
-			return RedirectToAction("New");
+			if( id.HasValue )
+			{
+				var client = Session.Get<Client>(id.Value);
+				client.Name = input.Name;
+
+				var project = Session.QueryOver<Project>()
+					.Where(x => x.Client.Id==id.Value)
+					.And(x => x.StandardProject)
+					.SingleOrDefault();
+
+				project.ChangeSku(input.Sku);
+			}
+			else
+			{
+				var client = new Client
+				{
+					Name = input.Name
+				};
+
+				var project = Project.CreateStandardProject(client, input.Sku);
+
+				Session.Save(client);
+				Session.Save(project);
+			}
+
+			return RedirectToAction("List");
 		}
 
 		public ActionResult List()
 		{
-			var clients = Session.QueryOver<Client>().OrderBy(x => x.Name).Desc.List();
+			var clients = Query(new ClientListQuery());
 
 			return View(clients);
-		}
-
-		public ActionResult Find(string term)
-		{
-			var clients = Session.QueryOver<Client>()
-				.WhereRestrictionOn(x => x.Name).IsInsensitiveLike(term, MatchMode.Start)
-				.List();
-
-			var projections = from client in clients
-				let name = client.Name
-				select new
-				{
-					label = name,
-					value = name
-				};
-
-			return Json(projections.ToList(), JsonRequestBehavior.AllowGet);
 		}
 	}
 }

@@ -1,0 +1,19 @@
+﻿@model Estime.Web.ViewModels.ProjectInput
+
+<h2>@ViewBag.Title</h2>
+
+@using(Html.BeginForm("Edit", "Project"))
+{
+	@Html.EditorForModel()
+
+	<p>
+		<button type="submit">Gem</button>
+		<a href="@Url.Action("Edit", "Client", new {id = Model.ClientId})">Fortryd</a>
+	</p>
+}
+
+@section AdditionalScripts
+{
+	<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"> </script>
+	<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")"> </script>
+}

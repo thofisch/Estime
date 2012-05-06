@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using System.Web;
+﻿using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Estime.Web.Controllers;
@@ -8,13 +7,9 @@ using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using FluentNHibernate.Conventions.Helpers;
 using NHibernate;
-using NHibernate.Tool.hbm2ddl;
 
 namespace Estime.Web
 {
-	// Note: For instructions on enabling IIS6 or IIS7 classic mode, 
-	// visit http://go.microsoft.com/?LinkId=9394801
-
 	public class MvcApplication : HttpApplication
 	{
 		public static void RegisterGlobalFilters(GlobalFilterCollection filters)
@@ -38,17 +33,19 @@ namespace Estime.Web
 		{
 			AutoMapperConfiguration.Configure();
 
-			InitializeSessionFactory();
+			initializeSessionFactory();
 
 			AreaRegistration.RegisterAllAreas();
 
 			RegisterGlobalFilters(GlobalFilters.Filters);
 			RegisterRoutes(RouteTable.Routes);
+
+			ValueProviderFactories.Factories.Add(new CookieValueProviderFactory());
 		}
 
 		public static ISessionFactory SessionFactory { get; private set; }
 
-		private static void InitializeSessionFactory()
+		private static void initializeSessionFactory()
 		{
 			var databaseConfig = MsSqlConfiguration.MsSql2008.FormatSql().ConnectionString(x => x.FromConnectionStringWithKey("Database"));
 			var configuration = Fluently.Configure()
@@ -62,11 +59,9 @@ namespace Estime.Web
 				})
 				.BuildConfiguration();
 
-			//new SchemaExport(configuration).Execute(true, true, false);
-
 			SessionFactory = configuration.BuildSessionFactory();
 
-			//HibernatingRhinos.Profiler.Appender.NHibernate.NHibernateProfiler.Initialize();
+			HibernatingRhinos.Profiler.Appender.NHibernate.NHibernateProfiler.Initialize();
 		}
 	}
 }

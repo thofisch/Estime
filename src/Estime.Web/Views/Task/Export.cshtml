@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Estime.Web.ViewModels.TaskExportViewModel>
+
+@{
+	ViewBag.Title = "Eksporter";
+}
+
+<h2>title</h2>
+
+@using(Html.BeginForm("ExportToFile", "Task"))
+{
+	<button type="submit">Eksport</button>
+}
+
+<table style="width: 100%">
+	<thead>
+		<tr>
+			<th>Projektnummer</th>
+			<th>Kundenummer</th>
+			<th>Dato</th>
+			<th>Varenummer</th>
+			<th>Antal</th>
+			<th>Beskrivelse</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach(var task in Model)
+		{
+			<tr>
+				<td>@task.ProjectSku
+					@if( !task.StandardTask )
+					{
+						@:( @task.ProjectName )
+					}
+				</td>
+				<td>@task.ClientName ( @task.ClientSku )</td>
+				<td>@task.Timestamp.ToString("yyyy-MM-dd")</td>
+				<td>@task.Sku 
+					@if( !string.IsNullOrWhiteSpace(task.Name) )
+					{
+						@:( @task.Name )
+					}
+				</td>
+				<td>@task.Quantity</td>
+				<td>@task.Description</td>
+			</tr>
+		}
+	</tbody>
+</table>

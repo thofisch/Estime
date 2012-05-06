@@ -25,27 +25,31 @@ namespace Estime.Web.Controllers
 				return;
 			}
 
-			var session = controller.Session;
-			if( session==null )
+			using(var session = controller.Session)
 			{
-				return;
-			}
-
-			var transaction = session.Transaction;
-			if( transaction!=null && transaction.IsActive )
-			{
-				if( filterContext.Exception!=null )
+				if( session==null )
 				{
-					transaction.Rollback();
+					return;
 				}
-				else
-				{
-					transaction.Commit();
-				}
-				transaction.Dispose();
-			}
 
-			session.Dispose();
+				using(var transaction = session.Transaction)
+				{
+					if( transaction==null || !transaction.IsActive )
+					{
+						return;
+					}
+
+					if( filterContext.Exception!=null )
+					{
+						transaction.Rollback();
+					}
+					else
+					{
+						transaction.Commit();
+					}
+					transaction.Dispose();
+				}
+			}
 		}
 	}
 }

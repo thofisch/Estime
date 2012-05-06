@@ -1,6 +1,7 @@
 ﻿using System.Web.Mvc;
 using System.Web.Security;
 using Estime.Web.Models;
+using Estime.Web.ViewModels;
 
 namespace Estime.Web.Controllers
 {

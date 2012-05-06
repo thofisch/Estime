@@ -1,4 +1,4 @@
-﻿@model IList<Estime.Web.Models.Client>
+﻿@model IEnumerable<Estime.Web.ViewModels.ClientListViewModel>
 @{
 	ViewBag.Title = "Kunder";
 }
@@ -8,15 +8,23 @@
 <table style="width: 100%">
 	<thead>
 		<tr>
-			<th>Navn</th>
+			<th style="width: 100%;">Navn</th>
+			<th style="white-space: nowrap; text-align: right;">Ekstern Id</th>
+			<th style="white-space: nowrap; text-align: right;">Projekter</th>
 		</tr>
 	</thead>
 	<tbody>
 		@foreach(var client in Model)
 		{
-			<tr onclick="location.href = '@Url.Action("Edit", "Client", new { client.Id })'" style="cursor: pointer;" onmouseover="$(this).addClass('selected');" onmouseout="$(this).removeClass('selected');" title="Se detaljer">
+			<tr onclick="   location.href = '@Url.Action("Edit", "Client", new {client.Id})'" style="cursor: pointer;" onmouseover=" $(this).addClass('selected'); " onmouseout=" $(this).removeClass('selected'); " title="Se detaljer">
 				<td>@client.Name</td>
+				<td style="white-space: nowrap; text-align: right;">@client.Sku</td>
+				<td style="white-space: nowrap; text-align: right;">@(client.NumberOfProjects - 1)</td>
 			</tr>
 		}
 	</tbody>
 </table>
+
+<p>
+	<a href="@Url.Action("New")">Opret ny</a>
+</p>

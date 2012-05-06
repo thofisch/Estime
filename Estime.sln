@@ -17,6 +17,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{CA8D36
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{E7EF2F70-311F-4125-AA35-45D01592818F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "create", "create", "{40B2DDE6-3AAE-4B5B-97E1-6AD87A358746}"
+	ProjectSection(SolutionItems) = preProject
+		build\scripts\create\0001_Create_database_structure.sql = build\scripts\create\0001_Create_database_structure.sql
+		build\scripts\create\0002_Insert_test_data.sql = build\scripts\create\0002_Insert_test_data.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "update", "update", "{2FFED28F-E402-4A93-B0D8-E8EF1E024A67}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,5 +44,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E7EF2F70-311F-4125-AA35-45D01592818F} = {46D9B113-BD1F-4F0E-BA2B-F6D1DB74AC57}
+		{40B2DDE6-3AAE-4B5B-97E1-6AD87A358746} = {E7EF2F70-311F-4125-AA35-45D01592818F}
+		{2FFED28F-E402-4A93-B0D8-E8EF1E024A67} = {E7EF2F70-311F-4125-AA35-45D01592818F}
 	EndGlobalSection
 EndGlobal

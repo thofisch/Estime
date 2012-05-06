@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Estime.Web.Models
 {
@@ -6,5 +7,6 @@ namespace Estime.Web.Models
 	{
 		public virtual Guid Id { get; set; }
 		public virtual string Name { get; set; }
+		public virtual IList<Project> Projects { get; set; }
 	}
 }

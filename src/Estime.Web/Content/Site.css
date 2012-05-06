@@ -9,29 +9,6 @@
 }
 
 
-.header {
-	border-radius: 5px 5px 0px 0px; 
-	-moz-border-radius: 5px 5px 0px 0px; 
-	-webkit-border-radius: 5px 5px 0px 0px; 
-	background-color: #fff;
-}
-
-.top-logo {
-	background-image: url('/Content/gfx/exato_solutions_top.jpg');
-	height: 136px;
-	background-repeat: no-repeat;
-	background-position: 10px 10px;
-	position: relative;
-
-}
-
-.top-logo .user-info {
-	position: absolute; 
-	right: 20px; 
-	top: 15px; 
-	background-color: #fff;
-}
-
 .nav {
 	background-color: #fff;
 	border-bottom: 1px dashed #E2E2E2;
@@ -68,22 +45,8 @@
 	font-weight: bold;
 }
 
-
 .new-task {
 	background-color: #fff;
-}
-
-.footer {
-	border-radius: 0px 0px 5px 5px; 
-	-moz-border-radius: 0px 0px 5px 5px; 
-	-webkit-border-radius: 0px 0px 5px 5px; 
-	text-align: center;
-	background-color: #fff;
-	border-top: 1px dashed #E2E2E2;
-	height: 50px;
-	min-height: 50px;
-	line-height: 50px;
-	margin-bottom: 10px;
 }
 
 /* FORM LAYOUT ELEMENTS   
@@ -105,24 +68,8 @@ textarea {
 }
 
 button[type="submit"] {
-	padding: 10px 20px 10px 35px;
-	background-repeat: no-repeat;
-	background-position: 5px center;
-	font-size: 120%;
-	font-weight: bold;
-	border-color: #ddd;
-}
-
-button.icon-accept {
-	background-image: url("/Content/gfx/accept.png");
-}
-
-button.icon-delete {
-	background-image: url("/Content/gfx/delete.png");
-}
-
-button.icon-disk {
-	background-image: url("/Content/gfx/disk.png");
+    font-size: 1.2em;
+    padding: 5px;
 }
 
 input[type="text"], 
@@ -220,14 +167,6 @@ table th {
 	padding: 3px;
 	display: inline-block;
 }
-
-/* timepicker styles */
-.ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
-.ui-timepicker-div dl { text-align: left; }
-.ui-timepicker-div dl dt { height: 25px; margin-bottom: -25px; }
-.ui-timepicker-div dl dd { margin: 0 10px 10px 65px; }
-.ui-timepicker-div td { font-size: 90%; }
-.ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
 
 .icon-hw-sw-add {
 	height: 25px;

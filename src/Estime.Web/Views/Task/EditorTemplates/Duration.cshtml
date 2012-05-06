@@ -34,17 +34,20 @@
 </select>
 minutter
 
-@Html.TextBox("", Model, new { style="display: none;" })
+<div style="position:absolute; top:-9999px; left:-9999px">
+	@Html.TextBox("", Model)
+</div>
 @Html.ValidationMessage("")
 
 <script type="text/javascript">
 
-	(function ($) {
+	(function($) {
 
 		function totalMonths() {
+
 			var h = parseInt($('#@ViewData.TemplateInfo.GetFullHtmlFieldId("hours")').val(), 10);
 			var m = parseInt($('#@ViewData.TemplateInfo.GetFullHtmlFieldId("minutes")').val(), 10);
-			$('#@ViewData.TemplateInfo.GetFullHtmlFieldId("")').val(h+m);
+			$('#@ViewData.TemplateInfo.GetFullHtmlFieldId("")').val(h + m);
 		}
 
 		$(function() {
@@ -57,3 +60,4 @@ minutter
 	})(jQuery);
 
 </script>
+

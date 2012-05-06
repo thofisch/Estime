@@ -2,8 +2,8 @@ namespace Estime.Web.Models
 {
 	public enum TaskStatus
 	{
-		Open = 0,
-		Closed,
-		Posted
+		Closed = 0,
+		Open = 1,
+		Posted = 2
 	}
 }

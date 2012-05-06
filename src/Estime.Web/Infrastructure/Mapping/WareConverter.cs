@@ -4,14 +4,14 @@ using Estime.Web.Models;
 
 namespace Estime.Web.Infrastructure.Mapping
 {
-	public class WareConverter : TypeConverter<Ware, SelectListItem>
+	public class WareConverter : TypeConverter<TaskWare, SelectListItem>
 	{
-		protected override SelectListItem ConvertCore(Ware source)
+		protected override SelectListItem ConvertCore(TaskWare source)
 		{
 			return new SelectListItem
 			{
-				Text = string.Format("{0}x{1}", source.Quantity, source.Name),
-				Value = string.Format("{0}x{1}", source.Quantity, source.Name),
+				Text = string.Format("{0}x{1}", source.Quantity, source.Ware.Name),
+				Value = source.Ware.Id.ToString(),
 				Selected = false
 			};
 		}

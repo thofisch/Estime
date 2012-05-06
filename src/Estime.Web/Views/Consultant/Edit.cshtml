@@ -1,17 +1,19 @@
-﻿@model Estime.Web.Models.Consultant
+﻿@model Estime.Web.ViewModels.ConsultantInput
 
-@{
-	ViewBag.Title = "title";
+<h2>@ViewBag.Title</h2>
+
+@using(Html.BeginForm("Edit", "Consultant"))
+{
+	@Html.EditorForModel()
+	
+	<p>
+		<button type="submit">Gem</button>
+		<a href="@Url.Action("List")">Fortryd</a>
+	</p>
 }
 
-<h2>title</h2>
-
-@using(Html.BeginForm())
+@section AdditionalScripts
 {
-
-	@Html.LabelFor(x => x.Name)
-	@Html.EditorFor(x => x.Name)
-	@Html.ValidationMessageFor(x => x.Name)
-
-	<button type="submit">Gem</button>
+	<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+	<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")"></script>
 }
