@@ -1,15 +1,6 @@
 ﻿@model IEnumerable<Estime.Web.ViewModels.TaskExportViewModel>
 
-@{
-	ViewBag.Title = "Eksporter";
-}
-
-<h2>title</h2>
-
-@using(Html.BeginForm("ExportToFile", "Task"))
-{
-	<button type="submit">Eksport</button>
-}
+<h2>Lukkede</h2>
 
 <table style="width: 100%">
 	<thead>
@@ -46,3 +37,8 @@
 		}
 	</tbody>
 </table>
+
+@using(Html.BeginForm("ExportToFile", "Task"))
+{
+	<p><button type="submit">Eksporter</button></p>
+}

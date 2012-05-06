@@ -1,0 +1,27 @@
+﻿@model IEnumerable<Estime.Web.ViewModels.OpenProjectListViewModel>
+
+<h2>Åbne opgaver</h2>
+
+<table style="width: 100%">
+	<thead>
+		<tr>
+			<th>Kunde</th>
+			<th>Projekt</th>
+			<th>Minutter</th>
+			<th>Vare</th>
+			<th>&nbsp;</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach(var project in Model)
+		{
+			<tr>
+				<td>@project.ClientName</td>
+				<td>@project.ProjectName</td>
+				<td>@project.TotalDurationInMinutes</td>
+				<td>@project.TotalNumberOfWares</td>
+				<td>@Html.ActionLink("Eksporter", "ExportProjectToFile", new { projectId = project.ProjectId})</td>
+			</tr>
+		}
+	</tbody>
+</table>

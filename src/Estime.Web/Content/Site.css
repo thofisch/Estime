@@ -11,34 +11,40 @@
 
 .nav {
 	background-color: #fff;
-	border-bottom: 1px dashed #E2E2E2;
 }
 
 .menu {
 	margin: 0 0 0 10px;
 	padding: 0;
 	list-style-type: none;
-
 }
 
 .menu li {
 	float: left;
 	margin-right: 10px;
-	margin-bottom: 10px;
 }
 
 .menu li a {
-	color: #f90;
+	background-color: #003366;
+	background-image: url(/Content/gfx/bg_menuitem.png);
+	background-position: right bottom;
+	background-repeat: no-repeat;
+	color: #6699cc;
+	padding: 5px 10px;
 	display: block;
 	text-decoration: none;
 }
 
 .menu li a.active {
-	color: #960;
+	background-color: #336699;
+	background-image: url(/Content/gfx/bg_menuitem_active.png);
+	color: #99ccff;
 }
 
 .menu li a:hover {
-	color: #fc9;
+	background-color: #6699cc;
+	background-image: url(/Content/gfx/bg_menuitem_hover.png);
+	color: #ffffff;
 }
 
 .special {

@@ -62,7 +62,6 @@ namespace Estime.Web
 
 			SessionFactory = configuration.BuildSessionFactory();
 
-
 			//HibernatingRhinos.Profiler.Appender.NHibernate.NHibernateProfiler.Initialize();
 		}
 	}

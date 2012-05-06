@@ -144,8 +144,8 @@ namespace Estime.Web.Controllers
 
 		public ActionResult ExportToFile()
 		{
-			var tasks = Query(new ExportClosedTasksQuery());
-			var taskDtos = tasks.Select(x => new TaskDto
+			var exportTasks = Query(new ExportClosedTasksQuery());
+			var taskDtos = exportTasks.Select(x => new TaskDto
 			{
 				ProjectSku = x.ProjectSku,
 				ClientSku = x.ClientSku,
@@ -159,6 +159,44 @@ namespace Estime.Web.Controllers
 			var engine = new DelimitedFileEngine<TaskDto>(encoding);
 			var result = engine.WriteString(taskDtos);
 			var data = encoding.GetBytes(result);
+
+			Session.CreateSQLQuery("update Task set Status = :posted where Status = :closed")
+				.SetEnum("posted", TaskStatus.Posted)
+				.SetEnum("closed", TaskStatus.Closed)
+				.ExecuteUpdate();
+
+			return File(data, "application/vnd.ms-excel", string.Format("export-{0:yyyyMMddHHmmss}.csv", DateTime.Now));
+		}
+
+		public ActionResult ExportProjects()
+		{
+			var projects = Query(new OpenProjectListQuery());
+
+			return View(projects);
+		}
+
+		public ActionResult ExportProjectToFile(Guid projectId)
+		{
+			var exportTasks = Query(new ExportProjectTasksQuery(projectId));
+			var taskDtos = exportTasks.Select(x => new TaskDto
+			{
+				ProjectSku = x.ProjectSku,
+				ClientSku = x.ClientSku,
+				Timestamp = x.Timestamp,
+				Sku = x.Sku,
+				Quantity = x.Quantity,
+				Description = x.Description.Replace('\n', ' ').Replace("\r", "")
+			});
+
+			var encoding = Encoding.GetEncoding(1252);
+			var engine = new DelimitedFileEngine<TaskDto>(encoding);
+			var result = engine.WriteString(taskDtos);
+			var data = encoding.GetBytes(result);
+
+			Session.CreateSQLQuery("update Task set Status = :posted where projectId = :projectId")
+				.SetEnum("posted", TaskStatus.Posted)
+				.SetGuid("projectId", projectId)
+				.ExecuteUpdate();
 
 			return File(data, "application/vnd.ms-excel", string.Format("export-{0:yyyyMMddHHmmss}.csv", DateTime.Now));
 		}
