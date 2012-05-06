@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System.Reflection;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Estime.Web.Controllers;
@@ -61,7 +62,8 @@ namespace Estime.Web
 
 			SessionFactory = configuration.BuildSessionFactory();
 
-			HibernatingRhinos.Profiler.Appender.NHibernate.NHibernateProfiler.Initialize();
+
+			//HibernatingRhinos.Profiler.Appender.NHibernate.NHibernateProfiler.Initialize();
 		}
 	}
 }
