@@ -7,11 +7,10 @@ namespace Estime.Web.ViewModels
 	public class ProjectInput
 	{
 		[HiddenInput(DisplayValue = false)]
-		public Guid ClientId { get; set; }
+		public Guid Id { get; set; }
 
-		[Required]
-		[StringLength(50)]
-		public string Sku { get; set; }
+		[HiddenInput(DisplayValue = false)]
+		public Guid ClientId { get; set; }
 
 		[Required]
 		[StringLength(255)]

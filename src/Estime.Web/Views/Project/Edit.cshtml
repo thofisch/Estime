@@ -9,6 +9,11 @@
 	<p>
 		<button type="submit">Gem</button>
 		<a href="@Url.Action("Edit", "Client", new {id = Model.ClientId})">Fortryd</a>
+		@if( Model.Id!=Guid.Empty )
+		{
+			<text>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</text>
+			<a href="@Url.Action("Close", new { id = Model.Id })">Luk åbne timer</a>
+		}
 	</p>
 }
 

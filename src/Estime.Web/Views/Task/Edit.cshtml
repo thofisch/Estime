@@ -6,7 +6,7 @@
 @using(Html.BeginForm("Edit", "Task"))
 {
 	<div class="container_4">
-		<div class="grid_4">
+		<div class="grid_1">
 			<div class="editor-label">
 				@Html.LabelFor(m => m.ConsultantId)
 			</div>
@@ -16,7 +16,7 @@
 			</div>
 		</div>
 
-		<div class="grid_4">
+		<div class="grid_3">
 			<div class="editor-label">
 				@Html.LabelFor(m => m.ProjectId)
 			</div>
@@ -26,7 +26,7 @@
 			</div>
 		</div>
 
-		<div class="grid_4">
+		<div class="grid_1">
 			<div class="editor-label">
 				@Html.LabelFor(m => m.Timestamp)
 			</div>
@@ -35,7 +35,7 @@
 				@Html.ValidationMessageFor(m => m.Timestamp)
 			</div>
 		</div>
-		<div class="grid_4">
+		<div class="grid_3">
 			<div class="editor-label">
 				@Html.LabelFor(m => m.DurationInMinutes)
 			</div>
@@ -44,21 +44,24 @@
 			</div>
 		</div>
 
-		<div class="grid_4">
+		<div class="grid_2">
 			<div class="editor-label">
 				@Html.LabelFor(m => m.Description)
 			</div>
 			<div class="editor-field">
-				@Html.TextAreaFor(m => m.Description, new {style = "width: 430px; height: 125px;"})
+				@Html.TextAreaFor(m => m.Description, new {style = "width: 430px; height: 75px;"})
 				@Html.ValidationMessageFor(m => m.Description)
 			</div>
 		</div>
-		<div class="grid_4">
+		<div class="grid_2">
+			<div class="editor-label">
+				&nbsp;
+			</div>
 			<div class="editor-field">
 				@Html.CheckBoxFor(m => m.Mileage)
 				@Html.LabelFor(m => m.Mileage)
 			</div>
-			<div class="editor-field">
+			<div id="projectStatus" class="editor-field">
 				@Html.CheckBoxFor(m => m.Closed)
 				@Html.LabelFor(m => m.Closed)
 			</div>
@@ -77,7 +80,7 @@
 				<button type="button" onclick=" $wares.clear(); return false; ">Ryd</button>
 			</div>
 			<div class="editor-field">
-				@Html.ListBox("wareList", Model.Wares, new {style = "width: 435px; height: 125px;"})
+				@Html.ListBox("wareList", Model.Wares, new {style = "width: 435px; height: 75px;"})
 				@Html.HiddenFor(x => x.SelectedWares)
 			</div>
 		</div>
@@ -97,6 +100,7 @@
 	<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"> </script>
 	<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")"> </script>
 	<script type="text/javascript" src="@Url.Content("~/Scripts/jquery-ui-1.8.17.js")"> </script>
+	<script type="text/javascript" src="@Url.Content("~/js/jquery-ui-datapicker-i18n.js")"></script>
 
 	<script type="text/javascript">
 
@@ -176,7 +180,21 @@
 					var projectId = $('option:selected', this).val();
 
 					if (projectId.length > 0) {
-						$('#Closed').attr('checked', projectStatusHash[projectId]);
+						var enabled = projectStatusHash[projectId];
+						$('#Closed').attr('checked', enabled);
+						@if( Model.Id==Guid.Empty )
+						{
+							<text>
+							if( enabled===true )
+							{
+								$('#projectStatus').show();
+							}
+							else
+							{
+								$('#projectStatus').hide();
+							}
+							</text>
+						}
 					}
 				});
 			});

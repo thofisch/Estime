@@ -10,10 +10,15 @@
 	<p>
 		<button type="submit">Gem</button>
 		<a href="@Url.Action("List")">Fortryd</a>
+		@if( !ViewBag.IsNew )
+		{
+			<text>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</text>
+			<a href="@Url.Action("Close", new { id = Model.Id })">Luk åbne opgaver</a>
+		}
 	</p>
 }
 
-@if( Model.Sku!=null )
+@if( !ViewBag.IsNew )
 {
 	<hr/>
 

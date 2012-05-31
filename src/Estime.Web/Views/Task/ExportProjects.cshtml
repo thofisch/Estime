@@ -20,8 +20,21 @@
 				<td>@project.ProjectName</td>
 				<td>@project.TotalDurationInMinutes</td>
 				<td>@project.TotalNumberOfWares</td>
-				<td>@Html.ActionLink("Eksporter", "ExportProjectToFile", new { projectId = project.ProjectId})</td>
+				<td><a href="@Url.Action("ExportProjectToFile", "Task", new { projectId = project.ProjectId})" target="_blank" onclick="delayedPageRefresh();">Eksporter</a></td>
 			</tr>
 		}
 	</tbody>
 </table>
+
+@section AdditionalScripts
+{
+	<script type="text/javascript">
+
+		function delayedPageRefresh() {
+			window.setTimeout(function () {
+				location.reload();
+			}, 2000);
+		}		
+
+	</script>
+}

@@ -103,8 +103,8 @@ namespace Estime.Web.Controllers
 		{
 			ViewBag.Title = "Åbne";
 
-			var standardTasks = Query(new TaskListQuery(TaskStatus.Open, true));
-			var projectTasks = Query(new TaskListQuery(TaskStatus.Open, false));
+			var standardTasks = Query(new TaskListQuery(TaskStatus.Open, ProjectQueryType.StandardProject));
+			var projectTasks = Query(new TaskListQuery(TaskStatus.Open, ProjectQueryType.TimeBased));
 
 			return View("List", new TasksViewModel
 			{
@@ -117,8 +117,8 @@ namespace Estime.Web.Controllers
 		{
 			ViewBag.Title = "Lukkede";
 
-			var standardTasks = Query(new TaskListQuery(TaskStatus.Closed, true));
-			var projectTasks = Query(new TaskListQuery(TaskStatus.Closed, false));
+			var standardTasks = Query(new TaskListQuery(TaskStatus.Closed, ProjectQueryType.StandardProject));
+			var projectTasks = Query(new TaskListQuery(TaskStatus.Closed, ProjectQueryType.TimeBased));
 
 			return View("List", new TasksViewModel
 			{
@@ -200,19 +200,56 @@ namespace Estime.Web.Controllers
 
 			return File(data, "application/vnd.ms-excel", string.Format("export-{0:yyyyMMddHHmmss}.csv", DateTime.Now));
 		}
+
+		public ActionResult All(TaskQueryInput input)
+		{
+			var consultants = Session.QueryOver<Consultant>().OrderBy(x => x.Name).Asc.List();
+			var projects = Session.QueryOver<Project>().Fetch(x => x.Client).Eager.TransformUsing(Transformers.DistinctRootEntity).List();
+			var projectViewModels = projects
+				.Select(project => new
+				{
+					project.Id,
+					Name = project.Client.Name + (project.StandardProject ? "" : " - " + project.Name)
+				})
+				.OrderBy(x => x.Name);
+
+			ViewBag.Consultants = new SelectList(consultants, "Id", "Name");
+			ViewBag.Clients = new SelectList(projectViewModels, "Id", "Name");
+			ViewBag.Statuses = new SelectList(
+				new[]
+				{
+					new {Id = TaskStatus.Open, Name = "Åbne"},
+					new {Id = TaskStatus.Closed, Name = "Lukkede"},
+					new {Id = TaskStatus.Posted, Name = "Eksporterede"},
+				}, "Id", "Name");
+
+			var tasks = Query(new TaskQuery(input));
+			ViewBag.Tasks = tasks;
+
+			return View();
+		}
 	}
 
-	[DelimitedRecord(";")]
+	[DelimitedRecord(",")]
 	public class TaskDto
 	{
+		[FieldQuoted('"', QuoteMode.AlwaysQuoted)]
 		public string ProjectSku;
+
+		[FieldQuoted('"', QuoteMode.AlwaysQuoted)]
 		public string ClientSku;
 
+		[FieldQuoted('"', QuoteMode.AlwaysQuoted)]
 		[FieldConverter(ConverterKind.Date, "yyyy-MM-dd")]
 		public DateTime Timestamp;
 
+		[FieldQuoted('"', QuoteMode.AlwaysQuoted)]
 		public string Sku;
+
+		[FieldQuoted('"', QuoteMode.AlwaysQuoted)]
 		public double Quantity;
+
+		[FieldQuoted('"', QuoteMode.AlwaysQuoted)]
 		public string Description;
 	}
 }

@@ -82,7 +82,7 @@ namespace Estime.Web.Infrastructure.Persistence.Queries
 				.Select(x => new TaskExportViewModel
 				{
 					Name = "",
-					Sku = "SKU-DRIVEN",
+					Sku = Ware.Mileage.Sku,
 					ClientName = x.ClientName,
 					ClientSku = x.ClientSku,
 					ProjectName = x.ProjectName,
@@ -90,7 +90,7 @@ namespace Estime.Web.Infrastructure.Persistence.Queries
 					Timestamp = x.Timestamp,
 					Quantity = 1,
 					Mileage = false,
-					Description = "Kørsel",
+					Description = Ware.Mileage.Name,
 					StandardTask = x.StandardTask
 				});
 

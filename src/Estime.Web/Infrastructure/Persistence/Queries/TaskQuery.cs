@@ -1,25 +1,18 @@
 using System.Collections.Generic;
 using Estime.Web.Models;
 using Estime.Web.ViewModels;
+using NHibernate.Criterion;
 using NHibernate.Transform;
 
 namespace Estime.Web.Infrastructure.Persistence.Queries
 {
-	public enum ProjectQueryType
+	public class TaskQuery : Query<IEnumerable<TaskListViewModel>>
 	{
-		StandardProject,
-		TimeBased
-	}
+		private readonly TaskQueryInput _input;
 
-	public class TaskListQuery : Query<IEnumerable<TaskListViewModel>>
-	{
-		private readonly TaskStatus _taskStatus;
-		private readonly bool _standardProject;
-
-		public TaskListQuery(TaskStatus taskStatus, ProjectQueryType type)
+		public TaskQuery(TaskQueryInput input)
 		{
-			_taskStatus = taskStatus;
-			_standardProject = type==ProjectQueryType.StandardProject;
+			_input = input;
 		}
 
 		public override IEnumerable<TaskListViewModel> Execute()
@@ -29,12 +22,37 @@ namespace Estime.Web.Infrastructure.Persistence.Queries
 			Client clientAlias = null;
 			TaskListViewModel alias = null;
 
-			var tasks = Session.QueryOver<Task>()
+			var query = Session.QueryOver<Task>()
 				.JoinAlias(x => x.Consultant, () => consultantAlias)
 				.JoinAlias(x => x.Project, () => projectAlias)
-				.JoinAlias(x => x.Project.Client, () => clientAlias)
-				.Where(x => x.Status==_taskStatus)
-				.And(() => projectAlias.StandardProject==_standardProject)
+				.JoinAlias(x => x.Project.Client, () => clientAlias);
+
+			if( _input.ConsultantId.HasValue )
+			{
+				query.Where(x => x.Consultant.Id==_input.ConsultantId.Value);
+			}
+			if( _input.ProjectId.HasValue )
+			{
+				query.Where(x => x.Project.Id==_input.ProjectId.Value);
+			}
+			if( _input.Status.HasValue )
+			{
+				query.Where(x => x.Status==_input.Status.Value);
+			}
+			if( _input.From.HasValue )
+			{
+				query.Where(x => x.Timestamp>=_input.From.Value);
+			}
+			if( _input.Until.HasValue )
+			{
+				query.Where(x => x.Timestamp<=_input.Until.Value);
+			}
+			if( !string.IsNullOrWhiteSpace(_input.Text) )
+			{
+				query.WhereRestrictionOn(x => x.Description).IsInsensitiveLike(_input.Text, MatchMode.Anywhere);
+			}
+
+			var tasks = query
 				.SelectList(list => list
 					.Select(x => x.Id).WithAlias(() => alias.Id)
 					.Select(() => consultantAlias.Name).WithAlias(() => alias.ConsultantName)

@@ -38,7 +38,17 @@
 	</tbody>
 </table>
 
-@using(Html.BeginForm("ExportToFile", "Task"))
+<p><a href="@Url.Action("ExportToFile", "Task")" target="_blank" onclick="delayedPageRefresh();">Eksporter</a></p>
+
+@section AdditionalScripts
 {
-	<p><button type="submit">Eksporter</button></p>
+	<script type="text/javascript">
+
+		function delayedPageRefresh() {
+			window.setTimeout(function() {
+				location.reload();
+			}, 2000);
+		}		
+
+	</script>
 }

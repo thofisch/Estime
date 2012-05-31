@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using Estime.Web.Infrastructure.Commands;
 using Estime.Web.Infrastructure.Persistence.Queries;
 using Estime.Web.Models;
 using Estime.Web.ViewModels;
@@ -12,6 +13,7 @@ namespace Estime.Web.Controllers
 		public ActionResult New()
 		{
 			ViewBag.Title = "Opret ny kunde";
+			ViewBag.IsNew = true;
 
 			return View("Edit", new ClientInput());
 		}
@@ -19,6 +21,7 @@ namespace Estime.Web.Controllers
 		public ActionResult Edit(Guid id)
 		{
 			ViewBag.Title = "Rediger kunde";
+			ViewBag.IsNew = false;
 
 			var client = Session
 				.QueryOver<Client>()
@@ -31,7 +34,6 @@ namespace Estime.Web.Controllers
 			var clientInput = new ClientInput
 			{
 				Id = client.Id,
-				Sku = client.Projects.First(x => x.StandardProject).Sku,
 				Name = client.Name
 			};
 
@@ -50,13 +52,6 @@ namespace Estime.Web.Controllers
 			{
 				var client = Session.Get<Client>(id.Value);
 				client.Name = input.Name;
-
-				var project = Session.QueryOver<Project>()
-					.Where(x => x.Client.Id==id.Value)
-					.And(x => x.StandardProject)
-					.SingleOrDefault();
-
-				project.ChangeSku(input.Sku);
 			}
 			else
 			{
@@ -65,7 +60,7 @@ namespace Estime.Web.Controllers
 					Name = input.Name
 				};
 
-				var project = Project.CreateStandardProject(client, input.Sku);
+				var project = Project.CreateStandardProject(client);
 
 				Session.Save(client);
 				Session.Save(project);
@@ -79,6 +74,18 @@ namespace Estime.Web.Controllers
 			var clients = Query(new ClientListQuery());
 
 			return View(clients);
+		}
+
+		public ActionResult Close(Guid id)
+		{
+			var project = Session.QueryOver<Project>()
+				.Where(x => x.Client.Id==id)
+				.And(x => x.StandardProject)
+				.SingleOrDefault();
+
+			Execute(new CloseOpenProjectTasks(project.Id));
+
+			return RedirectToAction("Edit", new {id});
 		}
 	}
 }

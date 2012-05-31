@@ -1,23 +1,24 @@
 using System;
+using Estime.Web.Util;
 
 namespace Estime.Web.Models
 {
 	public class Project
 	{
-		public static Project CreateStandardProject(Client client, string sku)
+		public static Project CreateStandardProject(Client client)
 		{
-			return new Project(client, sku, string.Empty, true, TaskStatus.Closed);
+			return new Project(client, string.Empty, true, TaskStatus.Closed);
 		}
 
-		public static Project CreateProject(Client client, string sku, string name)
+		public static Project CreateProject(Client client, string name)
 		{
-			return new Project(client, sku, name, false, TaskStatus.Open);
+			return new Project(client, name, false, TaskStatus.Open);
 		}
 
-		private Project(Client client, string sku, string name, bool standardProject, TaskStatus defaultTaskStatus)
+		private Project(Client client, string name, bool standardProject, TaskStatus defaultTaskStatus)
 		{
 			Client = client;
-			Sku = sku;
+			Sku = new UniqueSkuGenerator().Generate();
 			Name = name;
 			StandardProject = standardProject;
 			DefaultTaskStatus = defaultTaskStatus;
@@ -33,11 +34,6 @@ namespace Estime.Web.Models
 		public virtual string Name { get; private set; }
 		public virtual bool StandardProject { get; private set; }
 		public virtual TaskStatus DefaultTaskStatus { get; private set; }
-
-		public virtual void ChangeSku(string sku)
-		{
-			Sku = sku;
-		}
 
 		public virtual void ChangeName(string name)
 		{

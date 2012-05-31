@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
+using Estime.Web.Infrastructure.Commands;
 using Estime.Web.Models;
 using Estime.Web.ViewModels;
 
@@ -30,8 +31,8 @@ namespace Estime.Web.Controllers
 
 			var clientInput = new ProjectInput
 			{
+				Id = project.Id,
 				ClientId = project.Client.Id,
-				Sku = project.Sku,
 				Name = project.Name
 			};
 
@@ -52,16 +53,22 @@ namespace Estime.Web.Controllers
 			{
 				var project = Session.Get<Project>(id.Value);
 				project.ChangeName(input.Name);
-				project.ChangeSku(input.Sku);
 			}
 			else
 			{
-				var project = Project.CreateProject(client, input.Sku, input.Name);
-				
+				var project = Project.CreateProject(client, input.Name);
+
 				Session.Save(project);
 			}
 
 			return RedirectToAction("Edit", "Client", new {id = client.Id});
+		}
+
+		public ActionResult Close(Guid id)
+		{
+			Execute(new CloseOpenProjectTasks(id));
+
+			return RedirectToAction("Edit", new {id});
 		}
 	}
 }

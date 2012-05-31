@@ -9,10 +9,6 @@ namespace Estime.Web.ViewModels
 		public Guid Id { get; set; }
 
 		[Required]
-		[StringLength(50)]
-		public string Sku { get; set; }
-
-		[Required]
 		[StringLength(255)]
 		public string Name { get; set; }
 	}

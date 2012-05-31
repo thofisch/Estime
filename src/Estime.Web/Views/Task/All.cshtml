@@ -1,0 +1,101 @@
+﻿@using Estime.Web.ViewModels
+@model TaskQueryInput
+
+@{
+	ViewBag.Title = "Alle opgaver";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="container_4">
+
+	<h4>Filtrer / søg</h4>
+
+	@using(Html.BeginForm())
+	{
+		<div class="grid_2">
+			<div class="editor-label">
+				@Html.LabelFor(m => m.ConsultantId)
+			</div>
+			<div class="editor-field">
+				@Html.DropDownListFor(m => m.ConsultantId, (SelectList) ViewBag.Consultants, "Alle")
+			</div>
+		</div>
+		<div class="grid_2">
+			<div class="editor-label">
+				@Html.LabelFor(m => m.ProjectId) 
+			</div>
+			<div class="editor-field">
+				@Html.DropDownListFor(m => m.ProjectId, (SelectList) ViewBag.Clients, "Alle")
+			</div>
+		</div>
+
+		<div class="grid_2">
+			<div class="editor-label">
+				@Html.LabelFor(m => m.Status)
+			</div>
+			<div class="editor-field">
+				@Html.DropDownListFor(m => m.Status, (SelectList) ViewBag.Statuses, "Alle")
+			</div>
+		</div>
+		<div class="grid_1">
+			<div class="editor-label">
+				@Html.LabelFor(m => m.From)
+			</div>
+			<div class="editor-field">
+				@Html.TextBoxFor(x => x.From, new {style = "width: 100px;"})
+			</div>
+		</div>
+		<div class="grid_1">
+			<div class="editor-label">
+				@Html.LabelFor(m => m.Until)
+			</div>
+			<div class="editor-field">
+				@Html.TextBoxFor(x => x.Until, new {style = "width: 100px;"})
+			</div>
+		</div>
+
+		<div class="grid_3">
+			<div class="editor-label">
+				@Html.LabelFor(m => m.Text)
+			</div>
+			<div class="editor-field">
+				@Html.TextBoxFor(x => x.Text)
+			</div>
+		</div>
+
+		<div class="grid_1">
+			<div class="editor-label">&nbsp;</div>
+			<div class="editor-field">
+				<input type="submit" value="Opdater"/>
+				<input type="reset" value="Ryd"/>
+			</div>
+		</div>
+	}
+</div>
+
+<div style="clear: both;"></div>
+<div style="margin-top: 20px;">
+	@Html.Partial("_Tasks", (IList<TaskListViewModel>) ViewBag.Tasks)
+</div>
+
+@section AdditionalScripts
+{
+	<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"> </script>
+	<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")"> </script>
+	<script type="text/javascript" src="@Url.Content("~/Scripts/jquery-ui-1.8.17.js")"> </script>
+	<script type="text/javascript" src="@Url.Content("~/js/jquery-ui-datapicker-i18n.js")"></script>
+
+	<script type="text/javascript">
+
+		(function($) {
+
+			$(function() {
+				$('#From').datepicker();
+				$('#Until').datepicker();
+			});
+		})(jQuery);
+
+	</script>
+}
