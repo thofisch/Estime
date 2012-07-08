@@ -106,6 +106,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\MobileViewEnginesBootstrapper.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ClientController.cs" />
     <Compile Include="Controllers\ConsultantController.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="Controllers\SessionController.cs" />
     <Compile Include="Controllers\WareController.cs" />
     <Compile Include="Controllers\TaskController.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -127,6 +129,7 @@
     <Compile Include="Infrastructure\Mapping\AutoMapViewResult.cs" />
     <Compile Include="Infrastructure\Mapping\ViewModelProfile.cs" />
     <Compile Include="Infrastructure\Mapping\WareConverter.cs" />
+    <Compile Include="Infrastructure\Persistence\SessionFactoryProvider.cs" />
     <Compile Include="Infrastructure\Persistence\Model\ClientMap.cs" />
     <Compile Include="Infrastructure\Persistence\Model\ConsultantMap.cs" />
     <Compile Include="Infrastructure\Persistence\Model\ProjectMap.cs" />
@@ -295,6 +298,7 @@
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="Global.asax" />
+    <Content Include="js\jquery-ui-datapicker-i18n.js" />
     <Content Include="Scripts\jquery-1.7.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-ui-1.8.17.js" />
@@ -349,7 +353,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="js\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Project\Edit.cshtml" />

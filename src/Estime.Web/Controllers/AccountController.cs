@@ -1,6 +1,5 @@
 ﻿using System.Web.Mvc;
 using System.Web.Security;
-using Estime.Web.Models;
 using Estime.Web.ViewModels;
 
 namespace Estime.Web.Controllers
@@ -38,7 +37,7 @@ namespace Estime.Web.Controllers
 		{
 			FormsAuthentication.SignOut();
 
-			return RedirectToAction("Index", "Task");
+			return RedirectToAction("New", "Task");
 		}
 	}
 }

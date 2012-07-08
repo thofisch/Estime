@@ -1,2 +1,0 @@
-2012-03-07T23:09:23.8016000Z - 6248 - Info - Created provider from embedded device data 'FiftyOne.Foundation.Mobile.Detection.Binary.Resources.51Degrees.mobi-Lite.dat'.
-2012-03-07T23:10:04.5606000Z - 6248 - Info - Created provider from embedded device data 'FiftyOne.Foundation.Mobile.Detection.Binary.Resources.51Degrees.mobi-Lite.dat'.
