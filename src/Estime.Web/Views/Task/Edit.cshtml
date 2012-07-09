@@ -1,8 +1,5 @@
 ﻿@model Estime.Web.ViewModels.TaskInput
 
-<h2>@ViewBag.Title</h2>
-<p>Udfyld felterne og gem opgaven.</p>
-
 @using(Html.BeginForm("Edit", "Task"))
 {
 	<div class="container_4">
@@ -50,7 +47,6 @@
 			</div>
 			<div class="editor-field">
 				@Html.TextAreaFor(m => m.Description, new {style = "width: 430px; height: 75px;"})
-				@Html.ValidationMessageFor(m => m.Description)
 			</div>
 		</div>
 		<div class="grid_2">
@@ -74,6 +70,7 @@
 			<div class="editor-field">
 				<input type="text" id="wareQuantity" name="wareQuantity" style="width: 40px;" />
 				@Html.DropDownList("ware", (SelectList) ViewBag.Wares, "Vælg hardware/software")
+				<input type="text" id="warePrice" name="warePrice" style="width: 40px;" />
 
 				<button type="button" onclick=" $wares.add(); return false; ">Tilføj</button>
 				<button type="button" onclick=" $wares.remove(); return false; ">Fjern</button>
@@ -81,7 +78,7 @@
 			</div>
 			<div class="editor-field">
 				@Html.ListBox("wareList", Model.Wares, new {style = "width: 435px; height: 75px;"})
-				@Html.HiddenFor(x => x.SelectedWares)
+				@Html.TextBoxFor(x => x.SelectedWares)
 			</div>
 		</div>
 
@@ -113,8 +110,8 @@
 				$wareList.empty();
 
 				for (var id in list) {
-					values.push(id + '=' + list[id].quantity);
-					var html = $('<option value=' + id + '></option>').text(list[id].quantity + 'x ' + list[id].name);
+					values.push(id + '|' + list[id].quantity + '|' + list[id].price);
+					var html = $('<option value=' + id + '></option>').text(list[id].quantity + 'x ' + list[id].name + ' (' + list[id].price + ')');
 					$wareList.append(html);
 				}
 				$('#SelectedWares').val(values.join('¤'));
@@ -127,11 +124,16 @@
 			return {
 				add: function() {
 					var $wareQuantity = $('#wareQuantity');
+					var $warePrice = $('#warePrice');
 					var $ware = $("#ware option:selected");
 
 					var quantity = parseInt($wareQuantity.val(), 10);
 					if (isNaN(quantity)) {
 						quantity = 1;
+					}
+					var price = parseFloat($warePrice.val().replace(',', '.'));
+					if (isNaN(price)) {
+						price = 0;
 					}
 					var id = $ware.val();
 					var name = $ware.text();
@@ -140,9 +142,10 @@
 						if (quantity === 0) {
 							delete list[id];
 						} else {
-							list[id] = { quantity: quantity, name: name };
+							list[id] = { quantity: quantity, name: name, price: price };
 
 							$wareQuantity.val('');
+							$warePrice.val('');
 							$ware.removeAttr('selected');
 							$('#ware option:first').attr('selected', 'selected');
 						}
@@ -181,7 +184,7 @@
 
 					if (projectId.length > 0) {
 						var enabled = projectStatusHash[projectId];
-						$('#Closed').attr('checked', enabled);
+						$('#Closed').attr('checked', !enabled);
 						@if( Model.Id==Guid.Empty )
 						{
 							<text>

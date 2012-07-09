@@ -10,6 +10,7 @@
 			<th>Dato</th>
 			<th>Varenummer</th>
 			<th>Antal</th>
+			<th>Pris</th>
 			<th>Beskrivelse</th>
 		</tr>
 	</thead>
@@ -32,6 +33,7 @@
 					}
 				</td>
 				<td>@task.Quantity</td>
+				<td>@task.Price.ToString("0.00")</td>
 				<td>@task.Description</td>
 			</tr>
 		}

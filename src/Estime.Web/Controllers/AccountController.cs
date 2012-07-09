@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using System.Web.Security;
+using Estime.Web.Models;
 using Estime.Web.ViewModels;
 
 namespace Estime.Web.Controllers
@@ -16,15 +17,21 @@ namespace Estime.Web.Controllers
 		{
 			if( ModelState.IsValid )
 			{
-				if( Membership.ValidateUser(model.UserName, model.Password) )
+				var consultant = Session.QueryOver<Consultant>().Where(x => x.UserId==model.UserName).SingleOrDefault();
+
+				if( consultant!=null )
 				{
-					FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
-					if( Url.IsLocalUrl(returnUrl) && returnUrl.Length>1 && returnUrl.StartsWith("/")
-						&& !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\") )
+					var passwordHash = Cryptographer.GetPasswordHash(model.Password, consultant.Password.Salt);
+					if( passwordHash.Equals(consultant.Password.Hash) )
 					{
-						return Redirect(returnUrl);
+						FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
+						if( Url.IsLocalUrl(returnUrl) && returnUrl.Length>1 && returnUrl.StartsWith("/")
+							&& !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\") )
+						{
+							return Redirect(returnUrl);
+						}
+						return RedirectToAction("New", "Task");
 					}
-					return RedirectToAction("Index", "Task");
 				}
 				ModelState.AddModelError("", "The user name or password provided is incorrect.");
 			}

@@ -27,13 +27,8 @@ namespace Estime.Web.ViewModels
 		[Display(Name = "Dato")]
 		public DateTime Timestamp { get; set; }
 
-		[Display(Name = "Tid")]
-		[Required(ErrorMessage = "Tid skal udfyldes")]
-		[Range(1, int.MaxValue, ErrorMessage = "Tid skal udfyldes")]
 		public int DurationInMinutes { get; set; }
 
-		[Display(Name = "Arbejdsbeskrivelse")]
-		[Required(ErrorMessage = "Arbejdsbeskrivelse skal udfyldes")]
 		public string Description { get; set; }
 
 		[Display(Name = "Kørsel")]

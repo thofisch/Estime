@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Linq;
 using Estime.Web.Models;
 using Estime.Web.ViewModels;
@@ -21,7 +22,7 @@ namespace Estime.Web.Infrastructure.Commands
 			task.Project = Session.Get<Project>(_taskInput.ProjectId);
 			task.Timestamp = _taskInput.Timestamp;
 			task.DurationInMinutes = _taskInput.DurationInMinutes;
-			task.Description = _taskInput.Description;
+			task.Description = _taskInput.Description ?? string.Empty;
 			task.Mileage = _taskInput.Mileage;
 			task.Status = _taskInput.Closed ? TaskStatus.Closed : TaskStatus.Open;
 			task.CreatedAt = DateTime.Now;
@@ -37,16 +38,17 @@ namespace Estime.Web.Infrastructure.Commands
 			{
 				foreach(var wareData in _taskInput.SelectedWares.Split('¤'))
 				{
-					var wareParts = wareData.Split('=');
-					if( wareParts.Length!=2 )
+					var wareParts = wareData.Split('|');
+					if( wareParts.Length!=3 )
 					{
 						continue;
 					}
 
 					var id = Guid.Parse(wareParts[0]);
 					var quantity = int.Parse(wareParts[1]);
+					var price = double.Parse(wareParts[2], CultureInfo.GetCultureInfo("en-US"));
 
-					task.AddWare(wareMap[id], quantity);
+					task.AddWare(wareMap[id], quantity, price);
 				}
 			}
 

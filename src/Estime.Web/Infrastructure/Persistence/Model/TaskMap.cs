@@ -19,6 +19,7 @@ namespace Estime.Web.Infrastructure.Persistence.Model
 			{
 				c.References(x => x.Ware).Not.Nullable();
 				c.Map(x => x.Quantity).Not.Nullable();
+				c.Map(x => x.Price).Not.Nullable();
 			}).Table("TaskWare");
 			Map(x => x.CreatedAt).Not.Nullable().Not.Update();
 			Map(x => x.CreatedBy).Not.Nullable().Not.Update();

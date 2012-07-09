@@ -8,6 +8,7 @@ using FileHelpers;
 
 namespace Estime.Web.Controllers
 {
+	[Authorize]
 	public class WareController : SessionController
 	{
 		public ActionResult Import()

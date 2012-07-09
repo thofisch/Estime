@@ -26,9 +26,9 @@ namespace Estime.Web.Models
 		public virtual DateTime UpdatedAt { get; set; }
 		public virtual string UpdatedBy { get; set; }
 
-		public virtual void AddWare(Ware ware, int quantity)
+		public virtual void AddWare(Ware ware, int quantity, double price)
 		{
-			Wares.Add(new TaskWare(ware, quantity));
+			Wares.Add(new TaskWare(ware, quantity, price));
 		}
 	}
 }

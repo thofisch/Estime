@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -13,6 +14,7 @@ using NHibernate.Transform;
 
 namespace Estime.Web.Controllers
 {
+	[Authorize]
 	public class TaskController : SessionController
 	{
 		public ActionResult New(Guid? consultantId)
@@ -73,7 +75,8 @@ namespace Estime.Web.Controllers
 					var wareHash = task.Wares.ToDictionary(x => x.Ware.Id, x => new
 					{
 						quantity = x.Quantity,
-						name = x.Ware.Name
+						name = x.Ware.Name,
+						price = x.Price
 					});
 
 					ViewBag.WareList = wareHash.ToJson();
@@ -152,6 +155,7 @@ namespace Estime.Web.Controllers
 				Timestamp = x.Timestamp,
 				Sku = x.Sku,
 				Quantity = x.Quantity,
+				Price = x.Price.ToString("0.00", CultureInfo.GetCultureInfo("en-US")),
 				Description = x.Description.Replace('\n', ' ').Replace("\r", "")
 			});
 
@@ -185,6 +189,7 @@ namespace Estime.Web.Controllers
 				Timestamp = x.Timestamp,
 				Sku = x.Sku,
 				Quantity = x.Quantity,
+				Price = x.Price.ToString("0.00", CultureInfo.GetCultureInfo("en-US")),
 				Description = x.Description.Replace('\n', ' ').Replace("\r", "")
 			});
 
@@ -251,5 +256,8 @@ namespace Estime.Web.Controllers
 
 		[FieldQuoted('"', QuoteMode.AlwaysQuoted)]
 		public string Description;
+
+		[FieldQuoted('"', QuoteMode.AlwaysQuoted)]
+		public string Price;
 	}
 }

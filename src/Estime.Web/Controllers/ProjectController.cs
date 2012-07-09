@@ -6,6 +6,7 @@ using Estime.Web.ViewModels;
 
 namespace Estime.Web.Controllers
 {
+	[Authorize]
 	public class ProjectController : SessionController
 	{
 		public ActionResult New(Guid clientId)

@@ -12,6 +12,7 @@ namespace Estime.Web.ViewModels
 		public string ProjectSku { get; set; }
 		public DateTime Timestamp { get; set; }
 		public double Quantity { get; set; }
+		public double Price { get; set; }
 		public bool Mileage { get; set; }
 		public string Description { get; set; }
 		public bool StandardTask { get; set; }

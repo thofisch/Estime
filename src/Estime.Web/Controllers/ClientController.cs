@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web.Mvc;
 using Estime.Web.Infrastructure.Commands;
 using Estime.Web.Infrastructure.Persistence.Queries;
@@ -8,6 +10,7 @@ using Estime.Web.ViewModels;
 
 namespace Estime.Web.Controllers
 {
+	[Authorize]
 	public class ClientController : SessionController
 	{
 		public ActionResult New()
@@ -34,7 +37,7 @@ namespace Estime.Web.Controllers
 			var clientInput = new ClientInput
 			{
 				Id = client.Id,
-				Name = client.Name
+				Name = client.Name,
 			};
 
 			return View(clientInput);
@@ -86,6 +89,37 @@ namespace Estime.Web.Controllers
 			Execute(new CloseOpenProjectTasks(project.Id));
 
 			return RedirectToAction("Edit", new {id});
+		}
+	}
+
+	/// <summary>
+	/// Adapted from: http://davidhayden.com/blog/dave/archive/2004/02/16/157.aspx
+	/// </summary>
+	public static class Cryptographer
+	{
+		public static string CreateSalt()
+		{
+			const int size = 64;
+
+			// generate a cryptographic random number.
+			var buffer = new byte[size];
+			var rng = new RNGCryptoServiceProvider();
+			rng.GetBytes(buffer);
+
+			return Convert.ToBase64String(buffer);
+		}
+
+		public static string ComputeHash(string valueToHash)
+		{
+			HashAlgorithm algorithm = SHA512.Create();
+			var hash = algorithm.ComputeHash(Encoding.UTF8.GetBytes(valueToHash));
+
+			return Convert.ToBase64String(hash);
+		}
+
+		public static string GetPasswordHash(string password, string salt)
+		{
+			return ComputeHash(password + salt);
 		}
 	}
 }

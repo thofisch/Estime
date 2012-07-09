@@ -26,6 +26,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "create", "create", "{40B2DD
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "update", "update", "{2FFED28F-E402-4A93-B0D8-E8EF1E024A67}"
+	ProjectSection(SolutionItems) = preProject
+		build\scripts\update\0001_Update_wares_with_price.sql = build\scripts\update\0001_Update_wares_with_price.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +50,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E7EF2F70-311F-4125-AA35-45D01592818F} = {46D9B113-BD1F-4F0E-BA2B-F6D1DB74AC57}
+		{8E85A8A0-AD96-4021-AD9E-2C8F1C7E8B71} = {46D9B113-BD1F-4F0E-BA2B-F6D1DB74AC57}
 		{40B2DDE6-3AAE-4B5B-97E1-6AD87A358746} = {E7EF2F70-311F-4125-AA35-45D01592818F}
 		{2FFED28F-E402-4A93-B0D8-E8EF1E024A67} = {E7EF2F70-311F-4125-AA35-45D01592818F}
 	EndGlobalSection
