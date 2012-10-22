@@ -41,7 +41,7 @@ namespace Estime.Web.Controllers
 		}
 
 		[HttpPost]
-		public ActionResult Edit(Guid? id, ProjectInput input)
+		public ActionResult Edit(Guid id, ProjectInput input)
 		{
 			if( !ModelState.IsValid )
 			{
@@ -50,9 +50,9 @@ namespace Estime.Web.Controllers
 
 			var client = Session.Get<Client>(input.ClientId);
 
-			if( id.HasValue )
+			if( id!=Guid.Empty )
 			{
-				var project = Session.Get<Project>(id.Value);
+				var project = Session.Get<Project>(id);
 				project.ChangeName(input.Name);
 			}
 			else
